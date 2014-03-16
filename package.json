@@ -1,0 +1,25 @@
+{
+  "name": "RyBot_BTC-E",
+  "version": "0.0.0",
+  "description": "a BTC-E trade bot",
+  "main": "server.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Ryex/RyBot_BTC-E.git"
+  },
+  "keywords": [
+    "BTC-E",
+    "Bitcoin",
+    "Lightcoin",
+    "Trade"
+  ],
+  "author": "Ryex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ryex/RyBot_BTC-E/issues"
+  },
+  "homepage": "https://github.com/Ryex/RyBot_BTC-E"
+}
