@@ -4,10 +4,121 @@
  * ====================================
  */
 
-var async = require('async');
 
-var db = require('./db').db;
+
+var async = require('async');
+var Db = require('./db')
+var db = Db.db;
 var config = require('./config.js');
+
+var template_config = {
+    name: "",
+    pairs: [],
+    signals: {},
+    pass: ""
+}
+
+
+
+
+function configure(cb) {
+    db.collection("config", function(err, collection) {
+        if (err) { 
+            return cb(err);
+        } else {
+            collection.find().toArray(function(err, docs) {
+                if (err) { 
+                    return cb(err);
+                } else {
+                    if (docs.length < 1) {
+                        global.SETUP = true;
+                    } else {
+                        global.CONFIG = docs[0];
+                        global.SETUP = false;
+                        console.log("Setup not needed 1")
+                    }
+                    return cb(null);
+                }
+            })
+        }
+    });
+}
+
+function ensure_users(cb) {
+    db.collection("users", function(err, collection) {
+        if (err) { 
+            return cb(err);
+        } else {
+            collection.find().toArray(function(err, users) {
+                if (err) { 
+                    return cb(err);
+                } else {
+                    if (users.length < 1 && !global.SETUP) {
+                        global.SETUP = true;
+                    }
+                    return cb(null);
+                }
+            })
+        }
+    });
+}
+
+
+function pull_trade_configs(cb) {
+    db.collection("trade_configs", function(err, collection) {
+        if (err) { 
+            return cb(err);
+        } else {
+            collection.find().toArray(function(err, docs) {
+                for (var i = 0; i < docs.length; i++) {
+                    global.CONFIGS.push(docs[i]);
+                    
+                }
+                return cb(null, docs)
+            })
+        }
+    });
+}
+
+
+function setup_pairs(pairs, callback) {
+    // a list of tasks that might need to be compleated async to get teh server ready
+    tasks = [];
+
+    // Create capped collections with a maximum of 20000 documents for traid pairs we want to trak
+    // and capped collections for 10 and 30 minuet charts
+    for (var i = 0; i < pairs.length; i++) {
+        var trades_name = "trades_" + pairs[i];
+        var min10_name = "10minute_" + pairs[i];
+        var min30_name = "30minute_" + pairs[i];
+
+
+        
+
+        //add to task q
+        tasks.push(function(cb){Db.createCollection(trades_name, cb);})
+        tasks.push(function(cb){Db.forceTTLindex(trades_name, cb);})
+        tasks.push(function(cb){Db.createCollection(min10_name, cb);})
+        tasks.push(function(cb){Db.forceTTLindex(min10_name, cb);})
+        //tasks.push(forcep2(min10_name))
+        tasks.push(function(cb){Db.createCollection(min30_name, cb);})
+        tasks.push(function(cb){Db.forceTTLindex(min30_name, cb);})
+        //tasks.push(forcep2(min30_name))
+
+
+
+    }
+
+    // run all our tasks async but in series
+    async.series(tasks, function(err, results) {
+        if (err) {
+            throw err;
+        }
+
+        callback(null, results);
+    })
+
+}
 
 
 
@@ -18,123 +129,32 @@ function prepare(callback) {
             throw err;
         }
 
-        // a list of tasks that might need to be compleated async to get teh server ready
-        tasks = [];
+        var tasks = [];
 
-        // Create capped collections with a maximum of 20000 documents for traid pairs we want to track
-        // and capped collections for 10 and 30 minuet charts
-        for (var i = 0; i < config.pairs.length; i++) {
-            var trades_name = "trades_" + config.pairs[i];
-            var min10_name = "10minute_" + config.pairs[i];
-            var min30_name = "30minute_" + config.pairs[i];
+        tasks.push(Db.ensureLog);
+        tasks.push(configure);
+        tasks.push(ensure_users);
+        tasks.push(pull_trade_configs);
 
+        var pairs = []
 
-            //force power of 2 allocation
-            var forcep2 = function(name) {
-                return function(cb){
-                    db.command( {collMod: name, usePowerOf2Sizes : true }, function(err, result) {
-                         if (err) { 
-                            cb(err);
-                        } else {
-                            console.log("forced power of 2 allocation on :", name, result);
-                            cb(null, result);
-                        }
-
-                    })
-                }   
+        for (var i = 0; i < global.CONFIGS.length; i++) {
+            for (var j = 0; j < global.CONFIGS[i].pairs.length; j++) {
+                pairs.push(global.CONFIGS[i].pairs[j])
             }
-
-            // ensure that TTL indexes exist
-            var forceTTLindex = function(name) { 
-                return function(cb){
-                    db.collection(name, function(err, collection) {
-                        if (err) {
-                            throw err;
-                        }
-                        //expire after 30 days
-                        collection.ensureIndex({ "createdAt": 1 }, { expireAfterSeconds: 1000*60*60*24*30}, function(err, indexName){
-                            if (err) { 
-                            cb(err);
-                            } else {
-                                console.log("forced TTL index on:", name, indexName);
-                                cb(null, indexName);
-                            }
-                        })
-                    })
-                }
-            }
-
-            // create our task function
-            var trade_coll = function(name) {
-                return function(cb){
-                    //{capped: true, size: 5242880, max: 20000},
-                    db.createCollection(name,  function(err, collection) {
-                        if (err) { 
-                            cb(err);
-                        } else {
-                            //capped 
-                            console.log("collection created:", collection.collectionName );
-                            cb(null, collection);
-                        }
-                    })
-                }
-                
-            }(trades_name)
-
-            var min10_coll = function(name) {
-                return function(cb){
-                    //{capped: true, size: 307200, max: 3000},
-                    db.createCollection(name,  function(err, collection) {
-                        if (err) { 
-                            cb(err);
-                        } else {
-                            //capped 
-                            console.log("collection created:", collection.collectionName );
-                            cb(null, collection);
-                        }
-                    })
-                }
-                
-            }(min10_name)
-
-            var min30_coll = function(name) {
-                return function(cb){
-                    //{capped: true, size: 102400, max: 1000},
-                    db.createCollection(name,  function(err, collection) {
-                        if (err) { 
-                            cb(err);
-                        } else {
-                            //capped 
-                            console.log("collection created:", collection.collectionName );
-                            cb(null, collection);
-                        }
-                    })
-                }
-                
-            }(min30_name)
-
-            //add to task q
-            tasks.push(trade_coll);
-            tasks.push(forceTTLindex(trades_name))
-            tasks.push(min10_coll);
-            tasks.push(forceTTLindex(min10_name))
-            //tasks.push(forcep2(min10_name))
-            tasks.push(min30_coll);
-            tasks.push(forceTTLindex(min30_name))
-            //tasks.push(forcep2(min30_name))
-
-
-
         }
 
-        // run all our tasks async but in series
+        tasks.push(function(cb){
+            setup_pairs(pairs, cb);
+        })
+
         async.series(tasks, function(err, results) {
             if (err) {
                 throw err;
             }
 
-            callback();
-        })
+            callback(null, results);
+        })    
     });
 
 }
@@ -142,5 +162,7 @@ function prepare(callback) {
 
 
 module.exports = {
-    prepare: prepare
+    prepare: prepare,
+    configure: configure,
+    ensure_users: ensure_users
 }

@@ -7,6 +7,7 @@ var config = require(global.appdir + '/config.js');
 //var btceTrade = new BTCE("YourApiKey", "YourSecret"),
 // No need to provide keys if you're only using the public api methods.
 var btcePublic = new BTCE();
+
 var TradeUpdater = function (pair) {
     var self = this;
 
@@ -170,7 +171,7 @@ var TradeUpdater = function (pair) {
                             throw err;
                         }
                         var candle = buildCandle(trades, d10);
-                        m10_coll.update({date: Math.floor(d10.valueOf() / 1000)}, candle, {upsert:true, w: 1}, function(err, result) {
+                        m10_coll.update({date: Math.floor(d10.valueOf() / 1000)}, candle, {upsert:true}, function(err, result) {
                             if (err) {
                                 throw err;
                             } 
@@ -214,11 +215,21 @@ var TradeUpdater = function (pair) {
     };
 }
 
-var pairUpdaters = {}
+function Trader(config) {
+    var self = this;
 
-for (var i = 0; i < config.pairs.length; i++) {
-    var updater = new TradeUpdater(config.pairs[i]);
-    pairUpdaters[config.pairs[i]] = updater;
+    self.pairUpdaters = {};
+
+    for (var i = 0; i < config.pairs.length; i++) {
+        var updater = new TradeUpdater(config.name, config.pairs[i]);
+        self.pairUpdaters[config.pairs[i]] = updater;
+    }
+
+    self.start_updating_pair = function(pair) {
+        if (self.pairUpdaters[pair]) {
+            self.pairUpdaters[pair].start_updating()
+        }
+    }
 }
 
 
@@ -248,5 +259,5 @@ for (var i = 0; i < config.pairs.length; i++) {
 // });
 
 module.exports = {
-    pairUpdaters: pairUpdaters
+    Trader: Trader
 }

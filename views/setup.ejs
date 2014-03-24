@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Setup Your Trade Bot</title>
+    <link rel='stylesheet' href='/css/style.css' />
+    
+    <% include bootstrap %>
+  </head>
+  <body>
+
+    <% include nav %>
+
+    <div class="jumbotron">
+      <div class="container-fluid">
+        <h1>Rybot BTC-e Trade Bot Stup</h1>
+        <p>We've detected that this is either your first time running the trade bot or there is no admin user set up.</p>
+        <p>Let's get your new bot set up! there are a few things we need before the bot can start tradeing. fill out the information below to continue</p>
+      </div>
+    </div>
+
+    <% include error_flash %>
+
+    <div class="container-fluid">
+      <form class="form-horizontal" role="form" method="POST" action="/setup">
+        
+        <div class="form-group">
+
+          <div class="form-group">  
+            <label for="user" class="col-lg-2 control-label">Admin Username</label>  
+            <div class="col-lg-10">  
+              <input type="text" class="form-control" name="user[name]" id="user" placeholder="Username" required autofocus />  
+            </div>  
+          </div>
+
+          <div class="form-group">  
+            <label for="pass" class="col-lg-2 control-label">Admin Password</label>  
+            <div class="col-lg-10">  
+              <input type="password" class="form-control" name="user[pass]" id="pass" placeholder="Password" required />  
+            </div>  
+          </div>
+
+        </div>
+        
+        <div class="form-group">
+
+          <div class="form-group">  
+            <label for="name" class="col-lg-2 control-label">Bot Name</label>  
+            <div class="col-lg-10">
+              <input type="text" class="form-control" name="app[name]" id="name" placeholder="Name"  required 
+                <% if (config.name) { %>
+                  value="<%=  config.name %>"
+                <% } %>
+              /> 
+            </div>  
+          </div>
+
+          <div class="form-group">  
+            <label for="key" class="col-lg-2 control-label">App API Key</label>  
+            <div class="col-lg-10">  
+              <input type="text" class="form-control" name="app[key]" id="key" placeholder="API Key" required
+                <% if (config.key) { %>
+                  value="<%= config.key%>"
+                <% }%>
+              />
+            </div>  
+          </div>  
+
+          <div class="form-group">  
+            <label for="secret" class="col-lg-2 control-label">App Secret</label>  
+            <div class="col-lg-10">
+              <input type="text" class="form-control" name="app[secret]" id="secret" placeholder="Secret"required
+                <% if (config.secret) { %> 
+                  value="<%= config.secret %>"
+                <% } %> 
+              /> 
+            </div>  
+          </div> 
+
+        </div>   
+  
+        <div class="form-group">  
+          <div class="col-lg-offset-2 col-lg-10">  
+            <button type="submit" class="btn btn-primary" name="setup" value="setup">Submit</button>  
+          </div>  
+        </div> 
+
+      </form>
+    </div>
+    
+  </body>
+</html>

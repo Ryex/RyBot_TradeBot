@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/css/style.css' />
+
+    <% include bootstrap %>
+  </head>
+  <body>
+    <% include nav %>
+
+    <% include error_flash %>
+
+    <div class="container">
+
+      <form class="form-signin" role="form" method="POST" action="/login">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
+        <input type="password" class="form-control" placeholder="Password" name="password" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+
+    </div>
+
+    
+  </body>
+</html>
+

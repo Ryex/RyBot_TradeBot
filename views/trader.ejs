@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/css/style.css' />
+    <link rel='stylesheet' href='/css/candlestick.css' />
+    <% include bootstrap %>
+
+    <script type="text/javascript" src="/js/d3.js"> </script>
+    <script type="text/javascript" src="/js/charts/candlestick.js"> </script>
+    <script type="text/javascript">
+        function setUpCandleChart(id, mins, pair) {
+            d = new Date()
+            var end = Math.floor(d.valueOf() / 1000)
+            var back_hours = mins == 10 ? 12 : mins == 30 ? 24 : 12;
+            d.setHours(d.getHours() - back_hours)
+            var start = Math.floor(d.valueOf() / 1000)
+            var points = mins == 10 ? 72 : mins == 30 ? 48 : 72;
+            var width = points * 12 + 80;
+            $.getJSON( "candle/" + mins + "/" + pair +"/" + start + "/" + end, function( data ) {
+                var candles = [];
+                for(var i = 0; i < data.length; i++){
+                    var ds = new Date(data[i].date * 1000).toISOString()
+                    var candle = [
+                        ds.substring(0, ds.length - 8), 
+                        data[i].open,
+                        data[i].high, 
+                        data[i].low, 
+                        data[i].close, 
+                        Math.max(data[i].bid_vol, data[i].ask_vol)
+                    ]
+                    candles.push(candle)
+                }
+                d3.candlestickSVG(width, 420, "svg" + id, candles, points)
+            });
+            
+        }
+        
+        $(document).ready(function() {
+            setUpCandleChart("min10", 10, 'btc_usd')
+            setUpCandleChart("min30", 30, 'btc_usd')
+        })
+    </script>
+  </head>
+  <body>
+    
+    <% include nav %>
+
+    <h2>10 Minute Candles</h2>
+    <div class="cchart" id="min10"></div>
+    <svg class="cchart" id="svgmin10"></svg>
+    <hr/>
+    <h2>30 Minute Candles</h2>
+    <div class="cchart" id="min30"></div>
+    <svg class="cchart" id="svgmin30"></svg>
+  </body>
+</html>
