@@ -1,40 +1,40 @@
-var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var Db = require(global.appdir + '/db');
 var db = Db.db;
-var config  = require(global.appdir + '/config.js')
+var config  = require(global.appdir + '/config.js');
 
 function findById(id, fn) {
   db.collection("users", function(err, collection){
     collection.findOne({_id: Db.ObjectID(id)}, function(err, user) {
       if (err) {
-        return fn(err)
+        return fn(err);
       } else {
         if (user) {
-          return fn(null, user)
+          return fn(null, user);
         } else {
-          return fn(new Error('User ' + id + ' does not exist'))
+          return fn(new Error('User ' + id + ' does not exist'));
         }
       }
-    })
-  })
+    });
+  });
 }
 
 function findByUsername(username, fn) {
   db.collection("users", function(err, collection){
     collection.findOne({username: username}, function(err, user) {
       if (err) {
-        return fn(err)
+        return fn(err);
       } else {
         if (user) {
-          return fn(null, user)
+          return fn(null, user);
         } else {
-          return fn(new Error('User ' + username + ' does not exist'))
+          return fn(new Error('User ' + username + ' does not exist'));
         }
       }
-    })
-  })
+    });
+  });
 }
 
 

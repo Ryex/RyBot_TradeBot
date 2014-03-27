@@ -6,23 +6,28 @@
 global.appdir = __dirname;
 
 global.SETUP = false;
-global.CONFIG = {};
+global.CONFIG = {
+    name: "",
+    key: "",
+    secret: "",
+    pairs: []
+};
 
 
 global.CONFIGS = [];
 global.SELECTED_CONFIG = -1;
-global.TRADERS = []
+global.TRADERS = [];
 
 var express = require('express');
 var routes = require(global.appdir + '/routes');
 var http = require('http');
 var path = require('path');
 var flash = require('connect-flash');
-var passport = require('passport')
+var passport = require('passport');
 
 var setup = require(global.appdir + '/setup.js');
 
-var config  = require(global.appdir + '/config.js')
+var config  = require(global.appdir + '/config.js');
 
 var app = express();
 
@@ -58,12 +63,11 @@ if ('development' == app.get('env')) {
 routes.add_routes(app);
 
 setup.prepare( function(){
-    var auth = require(global.appdir + '/auth.js')
-    console.log(config.serverPort, config.serverIp)
+    var auth = require(global.appdir + '/auth.js');
     http.createServer(app).listen(config.serverPort, config.serverIp, function(){
         console.log('Express server listening on ' + config.serverIp + ":" + config.serverPort);
-        var trader = require(global.appdir + '/trader.js')
+        var trader = require(global.appdir + '/trader.js');
         //trader.pairUpdaters['btc_usd'].start_updating()
     });
-})
+});
 

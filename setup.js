@@ -7,7 +7,7 @@
 
 
 var async = require('async');
-var Db = require('./db')
+var Db = require('./db');
 var db = Db.db;
 var config = require('./config.js');
 
@@ -16,7 +16,7 @@ var template_config = {
     pairs: [],
     signals: {},
     pass: ""
-}
+};
 
 
 
@@ -35,11 +35,11 @@ function configure(cb) {
                     } else {
                         global.CONFIG = docs[0];
                         global.SETUP = false;
-                        console.log("Setup not needed 1")
+                        console.log("Setup not needed 1");
                     }
                     return cb(null);
                 }
-            })
+            });
         }
     });
 }
@@ -58,7 +58,7 @@ function ensure_users(cb) {
                     }
                     return cb(null);
                 }
-            })
+            });
         }
     });
 }
@@ -74,8 +74,8 @@ function pull_trade_configs(cb) {
                     global.CONFIGS.push(docs[i]);
                     
                 }
-                return cb(null, docs)
-            })
+                return cb(null, docs);
+            });
         }
     });
 }
@@ -96,13 +96,13 @@ function setup_pairs(pairs, callback) {
         
 
         //add to task q
-        tasks.push(function(cb){Db.createCollection(trades_name, cb);})
-        tasks.push(function(cb){Db.forceTTLindex(trades_name, cb);})
-        tasks.push(function(cb){Db.createCollection(min10_name, cb);})
-        tasks.push(function(cb){Db.forceTTLindex(min10_name, cb);})
+        tasks.push(function(cb){Db.createCollection(trades_name, cb);});
+        tasks.push(function(cb){Db.forceTTLindex(trades_name, cb);});
+        tasks.push(function(cb){Db.createCollection(min10_name, cb);});
+        tasks.push(function(cb){Db.forceTTLindex(min10_name, cb);});
         //tasks.push(forcep2(min10_name))
-        tasks.push(function(cb){Db.createCollection(min30_name, cb);})
-        tasks.push(function(cb){Db.forceTTLindex(min30_name, cb);})
+        tasks.push(function(cb){Db.createCollection(min30_name, cb);});
+        tasks.push(function(cb){Db.forceTTLindex(min30_name, cb);});
         //tasks.push(forcep2(min30_name))
 
 
@@ -116,7 +116,7 @@ function setup_pairs(pairs, callback) {
         }
 
         callback(null, results);
-    })
+    });
 
 }
 
@@ -136,17 +136,17 @@ function prepare(callback) {
         tasks.push(ensure_users);
         tasks.push(pull_trade_configs);
 
-        var pairs = []
+        var pairs = [];
 
         for (var i = 0; i < global.CONFIGS.length; i++) {
             for (var j = 0; j < global.CONFIGS[i].pairs.length; j++) {
-                pairs.push(global.CONFIGS[i].pairs[j])
+                pairs.push(global.CONFIGS[i].pairs[j]);
             }
         }
 
         tasks.push(function(cb){
             setup_pairs(pairs, cb);
-        })
+        });
 
         async.series(tasks, function(err, results) {
             if (err) {
@@ -154,7 +154,7 @@ function prepare(callback) {
             }
 
             callback(null, results);
-        })    
+        });   
     });
 
 }
@@ -165,4 +165,4 @@ module.exports = {
     prepare: prepare,
     configure: configure,
     ensure_users: ensure_users
-}
+};
