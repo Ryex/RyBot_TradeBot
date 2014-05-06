@@ -28,19 +28,21 @@ exports.add_routes = function(app) {
     app.get('/setup', routes.setup);
     app.post('/setup', routes.setup);
 
-    app.get('/login', routes.login);
-    app.post('/login', passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
+    app.get('/login', ensureSetup, routes.login);
+    app.post('/login', ensureSetup, passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
         function(req, res) {
             res.redirect('/');
         }
     )
 
-    app.get('/logout', function(req, res){
+    app.get('/logout', ensureSetup, function(req, res){
         req.logout();
         res.redirect('/');
     });
 
     app.get('/candle/:name/:mins/:pair/:date_start/:date_end', ensureSetup, ensureAuthenticated,  routes.candles);
+
+    app.get ('/settings', ensureSetup, ensureAuthenticated, routes.settings.render)
 }
 
 routes.login = function(req, res){
@@ -48,7 +50,8 @@ routes.login = function(req, res){
     res.render('login', { title: title, name: title, error_message: req.flash('error') })   
 }
 
-routes.setup = require('./setup.js')
+routes.setup = require('./setup.js');
+routes.settings = require('./settings.js';)
 
 routes.index = function(req, res){
     var title = global.CONFIG.name ? global.CONFIG.name : "Rybot Trade Bot"

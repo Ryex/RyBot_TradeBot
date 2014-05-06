@@ -3,6 +3,7 @@ var passport = require('passport');
 
 var Db = require(global.appdir + '/db');
 var db = Db.db;
+var User = Db.User;
 var config  = require(global.appdir + '/config.js');
 var setup = require(global.appdir + '/setup.js');
 
@@ -55,19 +56,7 @@ module.exports = function(req, res){
 
                 /*tasks.push(function(cb){
                     // add the admin user
-                    db.collection("users", function(err, collection) {
-                        if (err) { 
-                            return cb(err);
-                        } else {
-                            collection.update({username: user.username}, user, {upsert:true}, function(err, result) {
-                                if (err) { 
-                                    return cb(err);
-                                } else {
-                                    return cb(null, result);
-                                }
-                            });
-                        }
-                    });
+                    User.updateUser(user, cb);
                 });*/
 
                 tasks.push(setup.configure);

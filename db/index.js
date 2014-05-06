@@ -101,6 +101,7 @@ exports.forcep2 = forcep2
 exports.db = db
 
 exports.candle = require('./candle.js');
+exports.User = require('./user.js');
 
 exports.ObjectID = ObjectID
 exports.Binary = Binary
@@ -108,3 +109,5 @@ exports.GridStore = GridStore
 exports.Grid = Grid
 exports.Code = Code
 exports.BSON = BSON
+
+

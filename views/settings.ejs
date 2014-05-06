@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Setup Your Trade Bot</title>
+    <title>Trade Bot Settings</title>
     <link rel='stylesheet' href='/css/style.css' />
     
     <% include bootstrap %>
@@ -12,38 +12,48 @@
 
     <div class="jumbotron">
       <div class="container-fluid">
-        <h1>Rybot BTC-e Trade Bot Setup</h1>
-        <p>We've detected that this is either your first time running the trade bot or there is no admin user set up.</p>
-        <p>Let's get your new bot set up! there are a few things we need before the bot can start tradeing. fill out the information below to continue</p>
+        <h1>Settings</h1>
+        <p>Use the forms below to Update the Bot settings</p>
       </div>
     </div>
 
     <% include error_flash %>
 
     <div class="container-fluid">
-      <form class="form-horizontal" role="form" method="POST" action="/setup">
+      
+      <form class="form-horizontal" role="form" method="POST" action="/settings/user">
         <div class="row">
-
-          <div class="col-lg-8">
-
-            <div class="form-group">
-              <h4>Admin User to Create</h4>
-              
-              <div class="form-group">  
-                <label for="user" class="col-lg-2 control-label">Username</label>
-                <div class="col-lg-10">  
-                  <input type="text" class="form-control" name="user[name]" id="user" placeholder="Username" required autofocus />
-                </div>  
-              </div>
-
-              <div class="form-group">  
-                <label for="pass" class="col-lg-2 control-label">Password</label> 
-                <div class="col-lg-10"> 
-                  <input type="password" class="form-control" name="user[pass]" id="pass" placeholder="Password" required /> 
-                </div>
-              </div>
-
+          <div class="form-group">
+            <h4>User Settings</h4>
+            
+            <div class="form-group">  
+              <label for="user" class="col-lg-2 control-label">Old Password</label>
+              <div class="col-lg-10">  
+                <input type="text" class="form-control" name="user[oldpass]" id="oldpass" placeholder="Username" required autofocus />
+              </div>  
             </div>
+
+            <div class="form-group">  
+              <label for="pass" class="col-lg-2 control-label">New Password</label> 
+              <div class="col-lg-10"> 
+                <input type="password" class="form-control" name="user[newpass]" id="newpass" placeholder="Password" required /> 
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-group">  
+          <div class="col-lg-10">  
+            <button type="submit" class="btn btn-primary" name="setup" value="setup">Submit</button>  
+          </div>  
+        </div>
+      </form>
+
+      <form class="form-horizontal" role="form" method="POST" action="/settings/bot">
+        <div class="row">
+          
+          <div class="col-lg-8">
 
             <div class="form-group">
               <h4>Bot Settings</h4>
