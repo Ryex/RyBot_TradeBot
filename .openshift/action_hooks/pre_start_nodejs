@@ -1,4 +1,4 @@
-echo "Running Prestart hook"
+echo "PRE_START: Running Prestart hook"
 
 export HOST=$OPENSHIFT_NODEJS_IP
 export PORT=$OPENSHIFT_NODEJS_PORT
