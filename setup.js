@@ -127,36 +127,59 @@ function prepare(callback) {
     // Establish connection to db
     db.open(function(err, db) {
         if (err) {
-            var err1 = new VError(err, "Failed to Connect to Database")
+            var err1 = new VError(err, "Failed to Connect to Database");
             return callback(err1);
         }
 
-        var tasks = [];
+        
 
-        tasks.push(Db.ensureLog);
-        tasks.push(configure);
-        tasks.push(ensure_users);
-        tasks.push(pull_trade_configs);
+        var setup_db = function() {
+            var tasks = [];
 
-        var pairs = [];
+            tasks.push(Db.ensureLog);
+            tasks.push(configure);
+            tasks.push(ensure_users);
+            tasks.push(pull_trade_configs);
 
-        for (var i = 0; i < global.CONFIGS.length; i++) {
-            for (var j = 0; j < global.CONFIGS[i].pairs.length; j++) {
-                pairs.push(global.CONFIGS[i].pairs[j]);
+            var pairs = [];
+
+            for (var i = 0; i < global.CONFIGS.length; i++) {
+                for (var j = 0; j < global.CONFIGS[i].pairs.length; j++) {
+                    pairs.push(global.CONFIGS[i].pairs[j]);
+                }
             }
+
+            tasks.push(function(cb){
+                setup_pairs(pairs, cb);
+            });
+
+            async.series(tasks, function(err, results) {
+                if (err) {
+                    return callback(err);
+                }
+
+                return callback(null, results);
+            });   
         }
 
-        tasks.push(function(cb){
-            setup_pairs(pairs, cb);
-        });
+        if (config.dbUser !== "") {
+            db.authenticate(config.dbUser, config.dbPass, {authdb: config.dbAuthName}, function(err, result) {
+                if (err) {
+                    var err1 = new VError(err, "Failed to Authenticate with Database");
+                    return callback(err1);
+                }
+                if (!result) {
+                    var err1 = new VError("Failed to Authenticate with Database");
+                    return callback(err1);
+                }
+                setup_db()
+            }); 
+        } else {
+            setup_db()
+        }
+        
 
-        async.series(tasks, function(err, results) {
-            if (err) {
-                return callback(err);
-            }
-
-            return callback(null, results);
-        });   
+        
     });
 
 }
