@@ -12,6 +12,19 @@ var setup = require(global.appdir + '/setup.js');
 
 module.exports = exports = routes = {};
 
+function badGlobalError(req, res, next) {
+    if (!global.BAD_ERROR) { return next();}
+    var title = global.CONFIG.name ? global.CONFIG.name : "Rybot Trade Bot";
+    var params = {
+        title: title, 
+        config: global.CONFIG, 
+        name: title,
+        error_message: req.flash('error'),
+        error: global.BAD_ERROR
+    };
+    res.render('error', params);
+}
+
 function ensureSetup(req, res, next) {
     if (!global.SETUP) { return next(); }
     res.redirect('/setup')
@@ -23,6 +36,8 @@ function ensureAuthenticated(req, res, next) {
 }
 
 exports.add_routes = function(app) {
+    app.use(badGlobalError);
+
     app.get('/', ensureSetup, ensureAuthenticated, routes.index);
 
     app.get('/setup', routes.setup);
@@ -51,7 +66,7 @@ routes.login = function(req, res){
 }
 
 routes.setup = require('./setup.js');
-routes.settings = require('./settings.js';)
+routes.settings = require('./settings.js');
 
 routes.index = function(req, res){
     var title = global.CONFIG.name ? global.CONFIG.name : "Rybot Trade Bot"

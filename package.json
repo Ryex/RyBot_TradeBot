@@ -1,10 +1,10 @@
 {
-  "name": "RyBot_BTC-E",
+  "name": "RyBot_Trader",
   "version": "0.0.0",
-  "description": "a BTC-E trade bot",
+  "description": "an API agnostic trade bot (BTC-E tested)",
   "scripts": {
-    "main": "app.js",
-    "test": "vows test/* --spec"
+    "start": "node server.js",
+    "test": "vows tests/* --spec"
   },
   "repository": {
     "type": "git",
@@ -23,20 +23,33 @@
   },
   "homepage": "https://github.com/Ryex/RyBot_BTC-E",
   "dependencies": {
-    "async": "^0.2.10",
-    "bcrypt": "^0.7.8",
-    "btc-e": "0.0.12",
-    "connect-flash": "^0.1.1",
-    "ejs": "^1.0.0",
-    "express": "^3.5.2",
-    "mongodb": "^1.4.3",
-    "monk": "^0.8.1",
-    "passport": "^0.2.0",
-    "passport-local": "^1.0.0",
-    "should": "^3.3.1"
+    "async": "^0.8.0",
+    "bcrypt": "*",
+    "btc-e": "0.0.14",
+    "connect-flash": "*",
+    "ejs": "*",
+    "express": "*",
+    "mongodb": "^1.4.4",
+    "passport": "*",
+    "passport-local": "*",
+    "body-parser" : "*",
+    "compression" : "*",
+    "cookie-session" : "*",
+    "morgan" : "*",
+    "cookie-parser" : "*",
+    "express-session" : "*",
+    "static-favicon" : "*",
+    "response-time" : "*",
+    "errorhandler" : "*",
+    "method-override" : "*",
+    "connect-timeout" : "*",
+    "vhost" : "*",
+    "csurf" : "*",
+    "verror" : "*"
   },
   "devDependencies": {
-    "should": "^3.1.3",
     "vows": "^0.7.0"
   }
 }
+
+

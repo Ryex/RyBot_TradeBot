@@ -13,6 +13,7 @@ var Db = mongo.Db,
 
 var config = require(global.appdir + '/config.js');
 
+// create a db connection but do not open it yet, tell it to confirm write on the majority of all replicas
 var db = new Db(config.dbName, new Server(config.dbHost, config.dbPort, {auto_reconnect: true}, {}), {w: 1});
 
 //force power of 2 allocation
@@ -90,24 +91,24 @@ var log = function(type, message) {
 }
  
 
-exports.ensureLog = ensureLog
-exports.log = log
+exports.ensureLog = ensureLog;
+exports.log = log;
 
-exports.createCollection = createCollection
-exports.forceTTLindex = forceTTLindex
-exports.forcep2 = forcep2
+exports.createCollection = createCollection;
+exports.forceTTLindex = forceTTLindex;
+exports.forcep2 = forcep2;
 
-// create a db connection but do not open it yes, tell it to confirm write on teh majority of all replicas
-exports.db = db
+
+exports.db = db;
 
 exports.candle = require('./candle.js');
 exports.User = require('./user.js');
 
-exports.ObjectID = ObjectID
-exports.Binary = Binary
-exports.GridStore = GridStore
-exports.Grid = Grid
-exports.Code = Code
-exports.BSON = BSON
+exports.ObjectID = ObjectID;
+exports.Binary = Binary;
+exports.GridStore = GridStore;
+exports.Grid = Grid;
+exports.Code = Code;
+exports.BSON = BSON;
 
 

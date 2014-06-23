@@ -1,17 +1,13 @@
-module.exports.CandleProvider = function(db, minutes, pair) {
+module.exports.CandleProvider = function(db, api, minutes, pair) {
     var self = this;
 
     self.db = db;
+    self.api = api;
+    self.minutes = minutes;
     self.pair = pair;
+    self.coll_name = "";
 
-    if (minutes == 10) {
-        self.coll_name = "10minute_" + self.pair
-    } else if (minutes == 30) {
-        self.coll_name = "30minute_" + self.pair
-    } else {
-        self.coll_name = "10minute_" + self.pair
-    }
-
+    self.coll_name.concat.apply(self.coll_name, [self.api, "_", self.minutes, "_minute_", self.pair])
 
     //get all candles between two dates
     self.getCandles = function(date_start, date_end, callback) {

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/css/style.css' />
+
+    <% include bootstrap %>
+  </head>
+  <body>
+    <% include nav %>
+
+    <div class="page-header">
+      <h2>There has been an error than can not be recovered from. Please resolve it and restart the server</h1>
+    </div>
+    <div class=".container-fluid alert alert-danger">
+      <div class="row">
+        <div class="col-md-1">
+          <font size="32px"><span class="glyphicon glyphicon-exclamation-sign" ></span></font>
+        </div>
+        <div class="col-md-11">
+          <p>Type: <%= error.type %></p>
+          <p>Message: <%= error %></p>
+          <pre><%= error.stack %></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>

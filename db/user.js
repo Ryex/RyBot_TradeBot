@@ -79,3 +79,19 @@ user.updateUser = function(user, cb) {
 
     })
 };
+
+user.removeUser = function(user, cb) {
+  db.collection("users", function(err, collection) {
+      if (err) { 
+          return cb(err);
+      } else {
+          collection.update({username: user.username}, user, {upsert:true}, function(err, result) {
+              if (err) { 
+                  return cb(err);
+              } else {
+                  return cb(null, result);
+              }
+          });
+      }
+  });
+}

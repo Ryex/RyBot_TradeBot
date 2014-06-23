@@ -39,7 +39,7 @@ passport.use(new LocalStrategy(
       if (err) return done(err);
       if (!user) return done(null, false, { message: 'Unknown user ' + username });
 
-      User.comparePassword(candidatePassword, user, function(err, isMatch){
+      User.comparePassword(candidatePassword, user, function(err, isMatch) {
         if (err) return done(err);
         if (!isMatch) {
           return done(null, false, { message: 'Invalid password' });
@@ -49,5 +49,5 @@ passport.use(new LocalStrategy(
       })
       
     })
-  };
+  }
 ));

@@ -30,7 +30,7 @@ module.exports = function(req, res){
             };
 
             check_config =function(config) {
-                if (config.name && config.key && config.secret) return true;
+                if (config.name) return true;
                 return false;
             };
 
@@ -54,10 +54,10 @@ module.exports = function(req, res){
                     });
                 });
 
-                /*tasks.push(function(cb){
+                tasks.push(function(cb){
                     // add the admin user
                     User.updateUser(user, cb);
-                });*/
+                });
 
                 tasks.push(setup.configure);
                 tasks.push(setup.ensure_users);

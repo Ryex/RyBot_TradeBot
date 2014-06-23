@@ -7,6 +7,7 @@
 
 
 var async = require('async');
+var VError = require('verror');
 var Db = require('./db');
 var db = Db.db;
 var config = require('./config.js');
@@ -112,7 +113,7 @@ function setup_pairs(pairs, callback) {
     // run all our tasks async but in series
     async.series(tasks, function(err, results) {
         if (err) {
-            throw err;
+            return callback(err);
         }
 
         callback(null, results);
@@ -126,7 +127,8 @@ function prepare(callback) {
     // Establish connection to db
     db.open(function(err, db) {
         if (err) {
-            throw err;
+            var err1 = new VError(err, "Failed to Connect to Database")
+            return callback(err1);
         }
 
         var tasks = [];
@@ -150,10 +152,10 @@ function prepare(callback) {
 
         async.series(tasks, function(err, results) {
             if (err) {
-                throw err;
+                return callback(err);
             }
 
-            callback(null, results);
+            return callback(null, results);
         });   
     });
 
