@@ -11,8 +11,8 @@ RyBot BTC-e Trade bot
 If you like my bot, a donation to any of the following addresses  would be appreciated:
 
     send a BTC-E code to me (ryexander) on btc-e! (recommended)
-    LTC:  
-    BTC:  
+    LTC:  LW3mXgjRGBHNpioo7ZeLHpQheEgqoEUjip
+    BTC:  164hM3Ro9AxKNK1KKJseedPVv4pKcVPSPA
 
 ### Legal
 

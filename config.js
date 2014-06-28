@@ -4,6 +4,10 @@ module.exports = {
 
     serverIp: process.env.HOST || '0.0.0.0',
     serverPort: process.env.PORT || 3000,
+    serverHTTPSPort: 442,
+
+    runHTTPS: false,
+    HTTPSOnly: false,
 
     dbName: process.env.DB_NAME || 'rybot', // name of database where data is to be stored
     dbAuthName: process.env.DB_AUTH_NAME || "rybot", // name of the database where the authenticating db user is (might not be the same ie. openshift)

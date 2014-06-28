@@ -89,10 +89,16 @@ routes.add_routes(app);
 setup.prepare( function(err, results){
     if (err) { global.BAD_ERROR = err; }
     var auth = require(global.appdir + '/auth.js');
-    http.createServer(app).listen(config.serverPort, config.serverIp, function(){
-        console.log('HTTP Express server listening on ' + config.serverIp + ":" + config.serverPort);
-        var trader = require(global.appdir + '/trader.js');
-        //trader.pairUpdaters['btc_usd'].start_updating()
-    });
+    if (config.runHTTPS) {
+        http.createServer(app).listen(config.serverHTTPSPort, config.serverIp, function(){
+            console.log('HTTPS Express server listening on ' + config.serverHTTPSIp + ":" + config.serverPort);
+        });
+    }
+    if (!config.HTTPSOnly || !config.runHTTPS) {
+        http.createServer(app).listen(config.serverPort, config.serverIp, function(){
+            console.log('HTTP Express server listening on ' + config.serverIp + ":" + config.serverPort);
+        });
+    }
+    
 });
 
