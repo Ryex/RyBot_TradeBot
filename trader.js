@@ -35,7 +35,7 @@ var TradeUpdater = function (pair) {
 
     self.stop_updating = function() {
         if (self.interval || self.updating) {
-            clearInterval(interval);
+            clearInterval(self.interval);
             self.interval = null;
 
         }
@@ -61,17 +61,17 @@ var TradeUpdater = function (pair) {
                     }
 
                     if (item) {
-                      self.highest_tid = item.tid;  
+                      self.highest_tid = item.tid;
                     }
 
                     //find the new trades
                     var new_trades = [];
                     for (var i = 0; i < trades.length; i++) {
                         var trade = {
-                            date: trades[i].date, 
-                            price: trades[i].price, 
-                            amount: trades[i].amount, 
-                            tid: trades[i].tid, 
+                            date: trades[i].date,
+                            price: trades[i].price,
+                            amount: trades[i].amount,
+                            tid: trades[i].tid,
                             type: trades[i].trade_type,
                             createdAt: new Date(trades[i].date * 1000)
                         };
@@ -83,7 +83,7 @@ var TradeUpdater = function (pair) {
                     console.log("New trades:", new_trades.length);
 
                     //add all new trades to the db
-                    if (new_trades.length > 0) { 
+                    if (new_trades.length > 0) {
                         collection.insert(new_trades, function(err, result) {
                             if (err) {
                                 throw err;
@@ -96,7 +96,7 @@ var TradeUpdater = function (pair) {
 
                 });
 
-            });            
+            });
         });
     };
 
@@ -107,22 +107,22 @@ var TradeUpdater = function (pair) {
             }
 
             var buildCandle = function(trades, date) {
-                
+
                 var candle = {
-                    date: Math.floor(date.valueOf() / 1000), 
-                    open: 0, 
-                    high: 0, 
-                    low: 0, 
-                    close: 0, 
-                    bid_vol: 0, 
-                    ask_vol: 0, 
-                    count: 0, 
+                    date: Math.floor(date.valueOf() / 1000),
+                    open: 0,
+                    high: 0,
+                    low: 0,
+                    close: 0,
+                    bid_vol: 0,
+                    ask_vol: 0,
+                    count: 0,
                     avg: 0,
                     tid_start: 0,
                     tid_end: 0,
                     createdAt: date
                 };
-                
+
                 for (var i = 0; i < trades.length; i++) {
                     var trade = trades[i];
                     if (i == 0) {
@@ -149,13 +149,13 @@ var TradeUpdater = function (pair) {
                     candle.count++
                     candle.avg += trade.price;
                 }
-                
+
                 candle.avg = candle.avg / candle.count
 
                 return candle
 
             }
-            
+
             //10 minute candles
             var d10 = new Date()
             var mins10 = Math.floor(d10.getMinutes() / 10) * 10
@@ -164,7 +164,7 @@ var TradeUpdater = function (pair) {
             trade_coll.find({date: { $gt: Math.floor(d10.valueOf() / 1000) }}).sort([['tid', 1]]).toArray(function(err, trades){
                 if (err) {
                     throw err;
-                } 
+                }
                 if (trades.length > 0) {
                     db.collection("10minute_" + self.pair, function(err, m10_coll) {
                         if (err) {
@@ -174,7 +174,7 @@ var TradeUpdater = function (pair) {
                         m10_coll.update({date: Math.floor(d10.valueOf() / 1000)}, candle, {upsert:true}, function(err, result) {
                             if (err) {
                                 throw err;
-                            } 
+                            }
 
                             console.log("Updated 10 min candle:", d10, "Result:", result);
                         });
@@ -192,7 +192,7 @@ var TradeUpdater = function (pair) {
                 if (err) {
                     throw err;
                 }
-                if (trades.length > 0) { 
+                if (trades.length > 0) {
                     db.collection("30minute_" + self.pair, function(err, m30_coll) {
                         if (err) {
                             throw err;
@@ -201,12 +201,12 @@ var TradeUpdater = function (pair) {
                         m30_coll.update({date: Math.floor(d30.valueOf() / 1000)}, candle, {upsert:true, w: 1}, function(err, result) {
                             if (err) {
                                 throw err;
-                            } 
+                            }
 
                             console.log("Updated 30 min candle:", d30, "Result:", result);
                         });
                     });
-                    
+
                 }
             });
 

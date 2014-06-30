@@ -1,0 +1,60 @@
+SPEC:
+
+
+API
+    BTC-e
+        Exists
+        Has a list of possible pairs
+        Has a Public API
+            That ...
+                can be constructed
+                has a function `trades` that when called asynchronously returns
+                    a list of trades
+                has a function `ticker` that when called asynchronously returns
+                    a ticker object
+                has a function `fee` that when called asynchronously returns
+                    a number
+                has a function `depth` that when called asynchronusly returns
+                    a list of asks
+                    a list of bids
+        Has Private API
+            That ...
+                can be constructed
+                responds to `fee`
+                responds to `ticker`
+                responds to `trades`
+                responds to `depth`
+                responds to `getInfo`
+                responds to `transHistory`
+                responds to `tradeHistory`
+                responds to `activeOrders`
+                responds to `trade`
+                responds to `cancelOrder`
+
+
+Aggregator
+    Has a `active_intervals` function
+        that returns a list of named intervals
+    Has have a `add` method
+        that accepts a name, a refresh time out, an API function, and a process function
+    Has a `remove` function
+        that takes a name and removes the interval
+    Should have Process functions for
+        Assets
+            Profit
+        Pairs
+            Trades
+            Candles
+            Signals
+                Various Algorithmes
+
+
+DB
+    Account
+        Has a list of accounts
+        Eash account
+            Has an API
+            Has a Key
+            Has a list of assets
+
+

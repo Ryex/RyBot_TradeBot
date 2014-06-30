@@ -4,3 +4,4 @@ RyBot.sublime*
 *~
 *.png
 /.openshift
+mongod

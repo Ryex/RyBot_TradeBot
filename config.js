@@ -2,7 +2,7 @@
 
 module.exports = {
 
-    serverIp: process.env.HOST || '0.0.0.0',
+    serverIp: process.env.IP || process.env.HOST || '0.0.0.0',
     serverPort: process.env.PORT || 3000,
     serverHTTPSPort: 442,
 
@@ -22,7 +22,7 @@ module.exports = {
 
     cookieSecret: "rybotcookiecat",
     cookieMaxAge: 1000 * 60 * 60 * 5, // 5 hours
-        
+
 
     simMode: true,
 

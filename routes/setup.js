@@ -1,3 +1,5 @@
+var VError = require('verror');
+
 var async = require('async');
 var passport = require('passport');
 
@@ -18,18 +20,15 @@ module.exports = function(req, res){
             var new_config = {};
             new_config.main = true;
             new_config.name = req.body.app.name;
-            new_config.key = req.body.app.key;
-            new_config.secret = req.body.app.secret;
-            new_config.pairs = req.body.pairs;
 
             console.log(user, new_config);
 
-            check_user = function(user) {
+            var check_user = function(user) {
                 if (user.username && user.password) return true;
                 return false;
             };
 
-            check_config =function(config) {
+            var check_config =function(config) {
                 if (config.name) return true;
                 return false;
             };
@@ -40,11 +39,11 @@ module.exports = function(req, res){
                 tasks.push(function(cb){
                     // update the config
                     db.collection("config", function(err, collection) {
-                        if (err) { 
+                        if (err) {
                             return cb(err);
                         } else {
                             collection.update({main: true}, new_config, {upsert:true}, function(err, result) {
-                                if (err) { 
+                                if (err) {
                                     return cb(err);
                                 } else {
                                     return cb(null, result);
@@ -64,7 +63,8 @@ module.exports = function(req, res){
 
                 async.series(tasks, function(err, results) {
                     if (err) {
-                        req.flash('error', err);
+                        var new_err  = new VError(err, "Could not save first time configuration");
+                        throw new_err;
                     }
 
                     res.redirect('/');
@@ -73,15 +73,15 @@ module.exports = function(req, res){
                 req.flash('error', 'Please fill in all fields');
                 res.redirect('/');
             }
-            
 
-            
+
+
         } else  if (req.method === 'GET'){
             var title = global.CONFIG.name ? global.CONFIG.name : "Rybot Trade Bot";
             var params = {
-                title: title, 
-                name:  title, 
-                config: global.CONFIG, 
+                title: title,
+                name:  title,
+                config: global.CONFIG,
                 error_message: req.flash('error'),
                 possiblePairs: config.possiblePairs
             };
@@ -89,5 +89,5 @@ module.exports = function(req, res){
         }
     } else {
         res.redirect('/');
-    }  
+    }
 };

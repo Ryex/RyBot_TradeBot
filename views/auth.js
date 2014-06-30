@@ -18,7 +18,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findById(id, function (err, user) {
+  User.findByID(id, function (err, user) {
     done(err, user);
   });
 });
@@ -36,18 +36,17 @@ passport.use(new LocalStrategy(
     // indicate failure and set a flash message.  Otherwise, return the
     // authenticated `user`.
     User.findByUsername(username, function(err, user) {
-      if (err) return done(err);
-      if (!user) return done(null, false, { message: 'Unknown user ' + username });
+      if (!user) return done(null, false, { message: 'Invalid Username/Password Pair'});
 
-      User.comparePassword(candidatePassword, user, function(err, isMatch) {
+      User.comparePassword(password, user, function(err, isMatch) {
         if (err) return done(err);
         if (!isMatch) {
-          return done(null, false, { message: 'Invalid password' });
+          return done(null, false, { message: 'Invalid Username/Password Pair' });
         } else {
           return done(null, user);
         }
       })
-      
+
     })
   }
 ));

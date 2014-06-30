@@ -2,9 +2,10 @@ var Db = require(global.appdir + '/db');
 var db = Db.db;
 var config  = require(global.appdir + '/config.js')
 
-var bcrypt = require('bcrypt'), 
+var bcrypt = require('bcrypt'),
     SALT_WORK_FACTOR = 10;
 
+var user;
 module.exports = user = {};
 
 user.findByID = function(id, cb) {
@@ -43,7 +44,7 @@ user.hashPassword = function(password, cb) {
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if(err) return cb(err);
 
-        bcrypt.hash(user.password, salt, function(err, hash) {
+        bcrypt.hash(password, salt, function(err, hash) {
             if(err) return cb(err);
             return cb(null, hash);
         });
@@ -57,18 +58,18 @@ user.comparePassword = function(candidatePassword, user, cb) {
     });
 };
 
-user.updateUser = function(user, cb) {
-    user.hashPassword(user.password, function(err, hash) {
+user.updateUser = function(user_obj, cb) {
+    user.hashPassword(user_obj.password, function(err, hash) {
         if (err) return cb(err);
 
-        user.password = hash;
-        
+        user_obj.password = hash;
+
         db.collection("users", function(err, collection) {
-            if (err) { 
+            if (err) {
                 return cb(err);
             } else {
-                collection.update({username: user.username}, user, {upsert:true}, function(err, result) {
-                    if (err) { 
+                collection.update({username: user_obj.username}, user_obj, {upsert:true}, function(err, result) {
+                    if (err) {
                         return cb(err);
                     } else {
                         return cb(null, result);
@@ -80,13 +81,13 @@ user.updateUser = function(user, cb) {
     })
 };
 
-user.removeUser = function(user, cb) {
+user.removeUser = function(user_obj, cb) {
   db.collection("users", function(err, collection) {
-      if (err) { 
+      if (err) {
           return cb(err);
       } else {
-          collection.update({username: user.username}, user, {upsert:true}, function(err, result) {
-              if (err) { 
+          collection.update({username: user_obj.username}, user_obj, {upsert:true}, function(err, result) {
+              if (err) {
                   return cb(err);
               } else {
                   return cb(null, result);

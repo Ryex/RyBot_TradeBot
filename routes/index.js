@@ -10,18 +10,25 @@ var db = Db.db;
 var config  = require(global.appdir + '/config.js');
 var setup = require(global.appdir + '/setup.js');
 
+var routes;
 module.exports = exports = routes = {};
+
+
+function genPageEnv(req, res) {
+    var title = global.CONFIG.name || "Rybot Trade Bot";
+    return {
+        title: title,
+        config: global.CONFIG,
+        name: title,
+        error_message: req.flash('error'),
+        error: global.BAD_ERROR,
+        user: req.user
+    }
+}
 
 function badGlobalError(req, res, next) {
     if (!global.BAD_ERROR) { return next();}
-    var title = global.CONFIG.name ? global.CONFIG.name : "Rybot Trade Bot";
-    var params = {
-        title: title, 
-        config: global.CONFIG, 
-        name: title,
-        error_message: req.flash('error'),
-        error: global.BAD_ERROR
-    };
+    var params = genPageEnv(req, res);
     res.render('error', params);
 }
 
@@ -61,16 +68,16 @@ exports.add_routes = function(app) {
 }
 
 routes.login = function(req, res){
-    var title = global.CONFIG.name ? global.CONFIG.name : "Rybot Trade Bot"
-    res.render('login', { title: title, name: title, error_message: req.flash('error') })   
+    var params = genPageEnv(req, res);
+    res.render('login', params)
 }
 
 routes.setup = require('./setup.js');
 routes.settings = require('./settings.js');
 
 routes.index = function(req, res){
-    var title = global.CONFIG.name ? global.CONFIG.name : "Rybot Trade Bot"
-    res.render('index', {title: title, name:  title })
+    var params = genPageEnv(req, res);
+    res.render('index', params)
 };
 
 routes.candles = require('./candles.js')
