@@ -1,7 +1,7 @@
 {
   "name": "RyBot_Trader",
   "version": "0.0.0",
-  "description": "an API agnostic trade bot (BTC-E tested)",
+  "description": "an API agnostic trade bot (BTC-e tested)",
   "scripts": {
     "start": "node server.js",
     "test": "vows tests/* --spec"
@@ -45,7 +45,11 @@
     "connect-timeout" : "*",
     "vhost" : "*",
     "csurf" : "*",
-    "verror" : "*"
+    "verror" : "*",
+    "colors" : "*",
+    "moment" : "*",
+    "mkdirp" : "*",
+    "callsite" : "*"
   },
   "devDependencies": {
     "vows": "^0.7.0"

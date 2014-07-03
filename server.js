@@ -12,6 +12,10 @@ var http = require('http');
 var https = require('https');
 var path = require('path');
 
+// Logging
+var scribe = require('./scribe');
+
+
 // get express and it's official middleware
 var express = require('express');
 var morgan = require('morgan');
@@ -34,6 +38,28 @@ var setup = require(global.appdir + '/setup.js');
 // load the configuration
 var config  = require(global.appdir + '/config.js');
 
+// configur logging
+
+scribe.configure(function(){
+    scribe.set('app', 'RyBot_Trader');                  // NOTE Best way learn about these settings is
+    scribe.set('logPath', global.appdir + '/scribe');   // them out for yourself.
+    scribe.set('defaultTag', 'DEFAULT_TAG');
+    scribe.set('divider', ':::');
+    scribe.set('identation', 5);                        // Identation before console messages
+
+    scribe.set('maxTagLength', 30);                     // Any tags that have a length greather than
+                                                        // 30 characters will be ignored
+
+    scribe.set('mainUser', process.env.USER);           // Username of the account which is running
+                                                        // the NodeJS server
+});
+
+scribe.addLogger("log", true , true, 'green');            // (name, save to file, print to console,
+scribe.addLogger('realtime', true, true, 'underline');    // tag color)
+scribe.addLogger('high', true, true, 'magenta');
+scribe.addLogger('normal', true, true, 'white');
+scribe.addLogger('low', true, true, 'grey');
+
 
 // set up the express server
 var app = express();
@@ -44,7 +70,9 @@ app.set('view engine', 'ejs');
 
 // development only
 if ('development' == app.get('env')) {
-    app.use(morgan('dev'));
+    app.use(scribe.express.logger(function(req, res){         // Express.js access log
+        return true;                                          // Filter out any Express messages
+    }));
 }
 
 // we want cookies
@@ -99,6 +127,6 @@ setup.prepare( function(err, results){
             console.log('HTTP Express server listening on ' + config.serverIp + ":" + config.serverPort);
         });
     }
-    
+
 });
 

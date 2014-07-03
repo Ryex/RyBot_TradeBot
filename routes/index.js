@@ -10,6 +10,8 @@ var db = Db.db;
 var config  = require(global.appdir + '/config.js');
 var setup = require(global.appdir + '/setup.js');
 
+var scribe = require(global.appdir + '/scribe');
+
 var routes;
 module.exports = exports = routes = {};
 
@@ -21,6 +23,9 @@ function genPageEnv(req, res) {
         config: global.CONFIG,
         name: title,
         error_message: req.flash('error'),
+        info_message: req.flash('info'),
+        success_message: req.flash('success'),
+        warning_message: req.flash('warning'),
         error: global.BAD_ERROR,
         user: req.user
     }
@@ -42,10 +47,18 @@ function ensureAuthenticated(req, res, next) {
   res.redirect('/login')
 }
 
+function ensureAdmin(req, res, next) {
+    if (req.user.admin) {return next(); }
+    res.flash("error", "Not an Admin");
+    res.redirect('/')
+}
+
 exports.add_routes = function(app) {
     app.use(badGlobalError);
 
     app.get('/', ensureSetup, ensureAuthenticated, routes.index);
+    
+    app.get('/log', ensureSetup, ensureAuthenticated, ensureAdmin, scribe.express.controlPanel()); 
 
     app.get('/setup', routes.setup);
     app.post('/setup', routes.setup);

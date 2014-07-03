@@ -20,6 +20,12 @@
          <div class="nav navbar-right" >
             <ul class="nav navbar-nav">
                 <li><a href="/settings">Settings</a></li>
+                <% if (user) {%>
+                    <% if (user.admin) {%>
+                        <li><a href="/logs">Error Logs</a></li>
+                    <% }%>
+                    <li><a href="/logout">Logout</a></li>
+                <% }%>
             </ul>
         </div>
     </div>

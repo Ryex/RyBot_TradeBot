@@ -1,12 +1,20 @@
-RyBot BTC-e Trade bot
+RyBot: *The* Trade bot
 ===============
-
+---
 
 
 ### Usage
 
 
+RyBot is an API agnostic Tradebot for Crypto, First developed for use with BTC-e RyBot lets
+you trade your Crypto on any exchange that provides an API that can be tied in (Currently only BTC-e)
+
+RyBot provides algorytem to signal trades but lets YOU decide which to use and how, Your in charge when you use
+RyBot.
+
+
 ### Donate
+
 
 If you like my bot, a donation to any of the following addresses  would be appreciated:
 

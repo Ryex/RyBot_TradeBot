@@ -19,7 +19,7 @@ vows.describe('Aggregator').addBatch({
             assert.isObject(agg.active_intervals())
         },
 
-        'Has a `add` function that takes a time out, an API function, and a process function': function (agg) {
+        'Has a `add` function that takes a name, a time out, an task function, and a process function': function (agg) {
             assert.isFunction(agg.add);
             assert.isBoolean(agg.add("test", 10, function(cb) {
                 console.log("Test interval")
@@ -31,11 +31,15 @@ vows.describe('Aggregator').addBatch({
 
         'Has a `remove` function that takes a name and removes a interval': function(agg) {
             assert.isFunction(agg.remove);
-            agg.add("test", 10, function(cb) {
-                console.log("Test interval")
-            }, function(data) {
-                console.log("Test Process Function")
-            });
+
+            try {
+                agg.add("test", 10, function(cb) {
+                    console.log("Test interval")
+                }, function(data) {
+                    console.log("Test Process Function")
+                });
+            } catch (Error){}
+
             assert.include(agg.active_intervals(), "test");
             assert.isBoolean(agg.remove("test"));
             assert.isEmpty(agg.active_intervals());
