@@ -26,7 +26,7 @@ user.findByID = function(id, cb) {
 
 user.findByUsername = function(username, cb) {
   db.collection("users", function(err, collection){
-    collection.findOne({username: username}, function(err, user) {
+    collection.findOne({username: username.toLowerCase()}, function(err, user) {
       if (err) {
         return cb(err);
       } else {

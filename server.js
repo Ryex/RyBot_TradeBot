@@ -13,7 +13,7 @@ var https = require('https');
 var path = require('path');
 
 // Logging
-var scribe = require('./scribe');
+var scribe = require(global.appdir + '/scribe');
 
 
 // get express and it's official middleware

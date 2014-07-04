@@ -15,7 +15,8 @@ module.exports = function(req, res){
     if (global.SETUP) {
         if (req.method === 'POST') {
             var user = {};
-            user.username = req.body.user.name;
+            user.username = req.body.user.name.toLowerCase();
+            user.name = req.body.user.name;
             user.password = req.body.user.pass;
             user.password_confirm = req.body.user.pass_confirm;
             user.admin = true;
@@ -42,6 +43,10 @@ module.exports = function(req, res){
             if (check_user(user) && check_config(new_config)) {
                 
                 if (check_pass(user)) {
+                    
+                    //prevent it form being saved
+                    delete user.password_confirm;
+                    
                     var tasks = [];
 
                     tasks.push(function(cb){

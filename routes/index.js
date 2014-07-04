@@ -60,7 +60,7 @@ exports.add_routes = function(app) {
 
     app.get('/', ensureSetup, ensureAuthenticated, routes.index);
     
-    app.get('/error_log', ensureSetup, ensureAuthenticated, ensureAdmin, scribe.express.controlPanel()); 
+    app.get('/log', ensureSetup, ensureAuthenticated, ensureAdmin, scribe.express.controlPanel()); 
 
     app.get('/setup', routes.setup);
     app.post('/setup', routes.setup);
@@ -85,6 +85,7 @@ exports.add_routes = function(app) {
 routes.buildRoutes = function () {
 
     routes.login = function(req, res){
+        if (req.user) {return res.redirect('/');}
         res.render('login', routes.genPageEnv(req, res))
     }
     

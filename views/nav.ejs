@@ -12,17 +12,17 @@
     <div class="nav navbar-collapse collapse">
         <div class="nav navbar-left navbar-text" style="margin-top: 0; margin-bottom: 0">
             <% if (user) {%>
-               Signed in as <%= user.username %> &nbsp; <a class="btn btn-default navbar-btn" href="/logout">Logout</a>
+               Signed in as <%= user.name %> &nbsp; <a class="btn btn-default navbar-btn" href="/logout">Logout</a>
             <% } else { %>
                 Not Signed in &nbsp; <a class="btn btn-primary navbar-btn" href="/logout">Sign in</a>
             <% }%>
         </div>
          <div class="nav navbar-right" >
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav nav-pills">
                 <li><a href="/settings">Settings</a></li>
                 <% if (user) {%>
                     <% if (user.admin) {%>
-                        <li><a href="/error_log">Error Logs</a></li>
+                        <li><a href="/log">Logs</a></li>
                     <% }%>
                     <li><a href="/logout">Logout</a></li>
                 <% }%>
