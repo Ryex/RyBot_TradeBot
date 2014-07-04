@@ -81,7 +81,9 @@ app.use(cookieParser(config.cookieSecret));
 // we want our cookies to store our session
 app.use(expressSession({
     cookie: { maxAge: config.cookieMaxAge },
-    secret: config.cookieSecret
+    secret: config.cookieSecret,
+    resave: true,
+    saveUninitialized: true
 }));
 
 // we want to be able to use flash messages
@@ -119,12 +121,12 @@ setup.prepare( function(err, results){
     var auth = require(global.appdir + '/auth.js');
     if (config.runHTTPS) {
         http.createServer(app).listen(config.serverHTTPSPort, config.serverIp, function(){
-            console.log('HTTPS Express server listening on ' + config.serverHTTPSIp + ":" + config.serverPort);
+            console.log('[Server] HTTPS Express server listening on ' + config.serverHTTPSIp + ":" + config.serverPort);
         });
     }
     if (!config.HTTPSOnly || !config.runHTTPS) {
         http.createServer(app).listen(config.serverPort, config.serverIp, function(){
-            console.log('HTTP Express server listening on ' + config.serverIp + ":" + config.serverPort);
+            console.log('[Server] HTTP Express server listening on ' + config.serverIp + ":" + config.serverPort);
         });
     }
 

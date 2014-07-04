@@ -36,7 +36,7 @@ function configure(cb) {
                     } else {
                         global.CONFIG = docs[0];
                         global.SETUP = false;
-                        console.log("Setup not needed 1");
+                        console.log("[Setup] Setup not needed");
                     }
                     return cb(null);
                 }

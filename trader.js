@@ -80,7 +80,7 @@ var TradeUpdater = function (pair) {
                         }
                     }
 
-                    console.log("New trades:", new_trades.length);
+                    console.log("[Trades] New trades:", new_trades.length);
 
                     //add all new trades to the db
                     if (new_trades.length > 0) {

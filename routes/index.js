@@ -16,7 +16,7 @@ var routes;
 module.exports = exports = routes = {};
 
 
-function genPageEnv(req, res) {
+routes.genPageEnv = function(req, res) {
     var title = global.CONFIG.name || "Rybot Trade Bot";
     return {
         title: title,
@@ -33,8 +33,7 @@ function genPageEnv(req, res) {
 
 function badGlobalError(req, res, next) {
     if (!global.BAD_ERROR) { return next();}
-    var params = genPageEnv(req, res);
-    res.render('error', params);
+    res.render('error', routes.genPageEnv(req, res));
 }
 
 function ensureSetup(req, res, next) {
@@ -54,11 +53,14 @@ function ensureAdmin(req, res, next) {
 }
 
 exports.add_routes = function(app) {
+    
+    routes.buildRoutes();
+    
     app.use(badGlobalError);
 
     app.get('/', ensureSetup, ensureAuthenticated, routes.index);
     
-    app.get('/log', ensureSetup, ensureAuthenticated, ensureAdmin, scribe.express.controlPanel()); 
+    app.get('/error_log', ensureSetup, ensureAuthenticated, ensureAdmin, scribe.express.controlPanel()); 
 
     app.get('/setup', routes.setup);
     app.post('/setup', routes.setup);
@@ -80,17 +82,18 @@ exports.add_routes = function(app) {
     app.get ('/settings', ensureSetup, ensureAuthenticated, routes.settings.render)
 }
 
-routes.login = function(req, res){
-    var params = genPageEnv(req, res);
-    res.render('login', params)
+routes.buildRoutes = function () {
+
+    routes.login = function(req, res){
+        res.render('login', routes.genPageEnv(req, res))
+    }
+    
+    routes.setup = require('./setup.js');
+    routes.settings = require('./settings.js');
+    
+    routes.index = function(req, res){
+        res.render('index', routes.genPageEnv(req, res))
+    };
+    
+    routes.candles = require('./candles.js')
 }
-
-routes.setup = require('./setup.js');
-routes.settings = require('./settings.js');
-
-routes.index = function(req, res){
-    var params = genPageEnv(req, res);
-    res.render('index', params)
-};
-
-routes.candles = require('./candles.js')

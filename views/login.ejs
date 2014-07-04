@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/css/style.css' />
-
-    <% include bootstrap %>
-  </head>
-  <body>
-    <% include nav %>
-
-    <% include flash %>
-
-    <div class="container">
-
-      <form class="form-signin" role="form" method="POST" action="/login">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
-        <input type="password" class="form-control" placeholder="Password" name="password" required>
-
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
-
-    </div>
-
+    <head>
+        <title><%= title %></title>
+        <link rel='stylesheet' href='/css/style.css' />
+        
+        <% include bootstrap %>
+    </head>
+    <body>
+        <% include nav %>
+        
+        <% include flash %>
+        
+        <div class="container">
+        
+            <form class="form-signin" role="form" method="POST" action="/login">
+                <h2 class="form-signin-heading">Please sign in</h2>
+                <div class="form-group" >
+                    <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
+                </div>
+                <div class="form-group" >
+                     <input type="password" class="form-control" placeholder="Password" name="password" required>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            </form>
+        
+        </div>
     
-  </body>
+    </body>
 </html>
 

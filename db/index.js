@@ -79,11 +79,11 @@ var ensureLog = function(cb) {
 var log = function(type, message) {
     db.collection(name, function(err, collection) {
         if (err) { 
-            console.log(err);
+            console.log("[DB] " + err);
         } else {
             collection.insert({type: type, message: message, createdAt: new Date()}, function(err, result){
                 if (err) { 
-                    console.log(err);
+                    console.log("[DB] " + err);
                 } 
             })
         }
