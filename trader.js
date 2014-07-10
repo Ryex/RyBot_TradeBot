@@ -1,7 +1,7 @@
 var BTCE = require('btc-e');
 
-var Db = require(global.appdir + '/db');
-var db = Db.db;
+var DB = require(global.appdir + '/db');
+var gdb = DB.db;
 var config = require(global.appdir + '/config.js');
 
 //var btceTrade = new BTCE("YourApiKey", "YourSecret"),
@@ -49,7 +49,7 @@ var TradeUpdater = function (pair) {
                 throw err;
             }
 
-            db.collection("trades_" + self.pair, function(err, collection) {
+            gdb().collection("trades_" + self.pair, function(err, collection) {
                 if (err) {
                     throw err;
                 }
@@ -101,7 +101,7 @@ var TradeUpdater = function (pair) {
     };
 
     self.update_candles = function() {
-        db.collection("trades_" + self.pair, function(err, trade_coll) {
+        gdb().collection("trades_" + self.pair, function(err, trade_coll) {
             if (err) {
                 throw err;
             }
@@ -125,7 +125,7 @@ var TradeUpdater = function (pair) {
 
                 for (var i = 0; i < trades.length; i++) {
                     var trade = trades[i];
-                    if (i == 0) {
+                    if (i === 0) {
                         candle.open = trade.price
                         candle.low = trade.price
                         candle.tid_start = trade.tid
@@ -166,7 +166,7 @@ var TradeUpdater = function (pair) {
                     throw err;
                 }
                 if (trades.length > 0) {
-                    db.collection("10minute_" + self.pair, function(err, m10_coll) {
+                    gdb().collection("10minute_" + self.pair, function(err, m10_coll) {
                         if (err) {
                             throw err;
                         }
@@ -193,7 +193,7 @@ var TradeUpdater = function (pair) {
                     throw err;
                 }
                 if (trades.length > 0) {
-                    db.collection("30minute_" + self.pair, function(err, m30_coll) {
+                    gdb().collection("30minute_" + self.pair, function(err, m30_coll) {
                         if (err) {
                             throw err;
                         }

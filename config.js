@@ -23,8 +23,5 @@ module.exports = {
     cookieSecret: "rybotcookiecat",
     cookieMaxAge: 1000 * 60 * 60 * 5, // 5 hours
 
-
-    simMode: true,
-
     traderTradesSleep: 30
 };

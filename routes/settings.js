@@ -1,10 +1,12 @@
+var rek = require("rekuire");
+
 var async = require('async');
 var passport = require('passport');
 
-var Db = require(global.appdir + '/db');
-var db = Db.db;
-var config  = require(global.appdir + '/config.js');
-var setup = require(global.appdir + '/setup.js');
+var DB = rek('db');
+var gdb = DB.getDb;
+var config  = rek('config.js');
+var setup = rek('setup.js');
 
 module.exports = {
     user_settins: function(req, res){

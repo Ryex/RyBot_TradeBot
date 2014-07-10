@@ -1,9 +1,9 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
-var Db = require(global.appdir + '/db');
-var db = Db.db;
-var User = Db.User;
+var DB = require(global.appdir + '/db');
+var gdb = DB.getDb;
+var User = DB.User;
 var config  = require(global.appdir + '/config.js');
 
 

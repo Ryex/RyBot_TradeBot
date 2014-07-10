@@ -7,29 +7,29 @@ API
         Has a list of possible pairs
         Has a Public API
             That ...
-                can be constructed
-                has a function `trades` that when called asynchronously returns
+                Can be constructed
+                Has a function `trades` that when called asynchronously returns
                     a list of trades
-                has a function `ticker` that when called asynchronously returns
+                Has a function `ticker` that when called asynchronously returns
                     a ticker object
-                has a function `fee` that when called asynchronously returns
+                Has a function `fee` that when called asynchronously returns
                     a number
-                has a function `depth` that when called asynchronusly returns
+                Has a function `depth` that when called asynchronusly returns
                     a list of asks
                     a list of bids
         Has Private API
             That ...
-                can be constructed
-                responds to `fee`
-                responds to `ticker`
-                responds to `trades`
-                responds to `depth`
-                responds to `getInfo`
-                responds to `transHistory`
-                responds to `tradeHistory`
-                responds to `activeOrders`
-                responds to `trade`
-                responds to `cancelOrder`
+                Can be constructed
+                Responds to `fee`
+                Responds to `ticker`
+                Responds to `trades`
+                Responds to `depth`
+                Responds to `getInfo`
+                Responds to `transHistory`
+                Responds to `tradeHistory`
+                Responds to `activeOrders`
+                Responds to `trade`
+                Responds to `cancelOrder`
 
 
 Aggregator
@@ -46,15 +46,50 @@ Aggregator
             Trades
             Candles
             Signals
-                Various Algorithmes
+                SMA
+                WMA
+                EMA
 
 
 DB
-    Account
-        Has a list of accounts
-        Eash account
-            Has an API
-            Has a Key
-            Has a list of assets
-
-
+    Configs
+        Has a Constructable `Config` object that ...
+            Has a bot name property
+            Has a `save` function
+        
+    Users
+        Has a asynchronous `listUsers` function that lists users in the database
+        Has a asynchronous `findByID` function that returns a user or an error
+        Has a asynchronous `findByUsername` function that returns a error
+        Has a asynchronous `hashPassword` function that takes a plain text password and returns a hashed version
+        Has a asynchronous `comparePassword` function that compairs a plain text password to a stored hashed password
+        Has a asynchronous `removeUser` function that removes a user form the database by username
+        Has a Constructable `User` object that...
+            Has a `name`
+            Has an all lowercase `username`
+            Has an `admin` boolean
+            Has a asynchronous `save` function that updates the user in the database
+            Has a asynchronous `delete` function that removes a matching user from the database (only works with _ID)
+            Has a asynchronous `setPassword` function that takes a plain text password and saves a hased password with the user
+            Has a asynchronous `testPassword` function that tests a plain text pass with the saved hash pass
+            Has a asynchronous `prepare` function that will set up properties of the user like the hash_password
+                User has a `hash_password` property now
+    
+    Accounts
+        Has a asynchronous `listAccounts` function that lists accounts in the database
+        Has a Constructable `Account` object that...
+            Has an `apiName`
+            Has an `apiKey`
+            Has an Assets object that...
+                holds a list of account assets that hold current balence and previous balences
+    
+    Signals
+        Has a asynchronous `listSignals` function that lists signals in the database
+        Has a Constructable `Signal` object that ...
+            Has an `apiName`
+            Has an `algorithm`
+            Has some `data`
+            
+    Candles
+        Has a `fetch` function that can pull a range of candles
+            

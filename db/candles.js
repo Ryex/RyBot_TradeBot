@@ -14,9 +14,9 @@ module.exports.CandleProvider = function(db, api, minutes, pair) {
         var start = date_start.valueOf() / 1000;
         var end = date_end.valueOf() / 100;
         self.getCollecton(function(err, collection){
-            if (err) callback(err);
+            if (err) return callback(err);
             collection.find({date: { $gt: start, $lt: end}}).sort([['date', 1]]).toArray(function(err, candles){
-                if (err) callback(err);
+                if (err) return callback(err);
                 callback(null, candles);
             })
         })

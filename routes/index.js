@@ -2,15 +2,17 @@
 /*
  * GET home page.
  */
+var rek = require("rekuire");
+ 
 var async = require('async');
 var passport = require('passport');
 
-var Db = require(global.appdir + '/db');
-var db = Db.db;
-var config  = require(global.appdir + '/config.js');
-var setup = require(global.appdir + '/setup.js');
+var DB = rek('db');
+var gdb = DB.getDb;
+var config  = rek('config.js');
+var setup = rek('setup.js');
 
-var scribe = require(global.appdir + '/scribe');
+var scribe = rek('scribe');
 
 var routes;
 module.exports = exports = routes = {};

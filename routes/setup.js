@@ -1,22 +1,21 @@
+var rek = require('rekuire');
 var VError = require('verror');
 
 var async = require('async');
 var passport = require('passport');
 
-var Db = require(global.appdir + '/db');
-var db = Db.db;
-var User = Db.User;
-var config  = require(global.appdir + '/config.js');
-var setup = require(global.appdir + '/setup.js');
+var DB = require('db');
+var gdb = DB.getDb;
+var User = DB.User;
+var config  = rek('config.js');
+var setup = rek('setup.js');
 
-var routes = require('./');
+var routes = rek('routes');
 
 module.exports = function(req, res){
     if (global.SETUP) {
         if (req.method === 'POST') {
-            var user = {};
-            user.username = req.body.user.name.toLowerCase();
-            user.name = req.body.user.name;
+            var user = User.template(req.body.user.name);
             user.password = req.body.user.pass;
             user.password_confirm = req.body.user.pass_confirm;
             user.admin = true;
@@ -51,7 +50,7 @@ module.exports = function(req, res){
 
                     tasks.push(function(cb){
                         // update the config
-                        db.collection("config", function(err, collection) {
+                        gdb().collection("config", function(err, collection) {
                             if (err) {
                                 return cb(err);
                             } else {

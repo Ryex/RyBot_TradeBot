@@ -1,11 +1,8 @@
 var vows = require('vows');
 var assert = require('assert');
 
-var API = require('../api');
-
 var aggregator = require('../aggregator');
 
-var api = new API.btce.public();
 
 vows.describe('Aggregator').addBatch({
 
