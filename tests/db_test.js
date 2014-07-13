@@ -365,6 +365,18 @@ vows.describe('DB').addBatch({
         'Accounts' : {
             topic : function(results) {
                 return DB.Accounts;
+            },
+            
+            'Has a asynchronous `listAccounts` function' : {
+                topic: function (accounts) {
+                    assert.isFunction(accounts.listAccounts);
+                    accounts.listAccounts(this.callback);
+                },
+                
+                'that lists accounts in the database' : function(err, data) {
+                    assert.isNull(err);
+                    assert.isArray(data);
+                }
             }
 
         },

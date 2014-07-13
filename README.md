@@ -1,6 +1,6 @@
 RyBot: *The* Trade bot
 ===============
-[![Build Status](https://travis-ci.org/Ryex/RyBot_TradeBotsvg?branch=master)](https://travis-ci.org/Ryex/RyBot_TradeBot)
+[![Build Status](https://travis-ci.org/Ryex/RyBot_TradeBot.svg)](https://travis-ci.org/Ryex/RyBot_TradeBot)
 ---
 
 RyBot is an API agnostic Tradebot for Crypto. First developed for use with BTC-e RyBot lets
@@ -26,8 +26,8 @@ Here are some instruction for use
 5. Run  `npm install`  or `npm update` 
 
 6. Edit `config.js` in the install folder to set your proper settings. 
-you will notice that the config file is set up to pull envierment varibles and use them as it's setting if they are there
-This is usefull if you are running the bot ona platform like openshift or heroku
+you will notice that the config file is set up to pull envierment varibles and use them as it's settings if the varibles are defined
+This is usefull if you are running the bot on a platform like openshift or heroku
 
 7. Run your mongodb server
 
