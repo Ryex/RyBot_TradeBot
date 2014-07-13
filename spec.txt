@@ -54,8 +54,9 @@ Aggregator
 DB
     Configs
         Has a Constructable `Config` object that ...
-            Has a bot name property
-            Has a `save` function
+            Has a `botName` property
+            Has a `main` property
+            Has an asynchronous `save` function That returns it\'s success
         
     Users
         Has a asynchronous `listUsers` function that lists users in the database
@@ -80,8 +81,9 @@ DB
         Has a Constructable `Account` object that...
             Has an `apiName`
             Has an `apiKey`
-            Has an Assets object that...
-                holds a list of account assets that hold current balence and previous balences
+            Has an `apiSecret`
+            Has an Assets object that holds a map of account assets
+                that holds lists of daily balences
     
     Signals
         Has a asynchronous `listSignals` function that lists signals in the database

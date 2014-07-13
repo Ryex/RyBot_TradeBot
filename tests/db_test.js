@@ -160,6 +160,7 @@ vows.describe('DB').addBatch({
 
             'Has a Constructable `Config` object that ...' : {
                 topic : function(configs) {
+                    assert.isFunction(configs.Config);
                     var cfg = new configs.Config({
                         botName: "TestBot",
                         main: true
@@ -168,7 +169,6 @@ vows.describe('DB').addBatch({
                 },
 
                 'Has a `botName` property' : function(config) {
-                    console.log("config: ", config)
                     assert.isString(config.botName);
                 },
 
@@ -176,8 +176,16 @@ vows.describe('DB').addBatch({
                     assert.isBoolean(config.main);
                 },
 
-                'Has a `save` function' : function(config) {
-                    assert.isFunction(config.save);
+                'Has an asynchronous `save` function' :  {
+                    topic: function(config) {
+                        assert.isFunction(config.save);
+                        config.save(this.callback);
+                    },
+                    
+                    'That returns it\'s success' : function(err, result) {
+                        assert.isNull(err);
+                        assert.equal(result, true);
+                    }
                 }
 
             }
@@ -265,6 +273,7 @@ vows.describe('DB').addBatch({
 
             'Has a Constructable `User` object that ...' : {
                 topic : function(users) {
+                    assert.isFunction(users.User);
                     var u = new users.User({name:"test2", password:"test123", admin:false});
                     return u;
                 },
@@ -377,6 +386,55 @@ vows.describe('DB').addBatch({
                     assert.isNull(err);
                     assert.isArray(data);
                 }
+            },
+            
+            'Has a Constructable `Account` object that...' : {
+                topic : function(accounts) {
+                    assert.isFunction(accounts.Account);
+                    var d = new Date();
+                    var acc = new accounts.Account({
+                        apiName: "btce",
+                        apiKey: "46G9R9D6-WJ77XOIP-XH9HH5VQ-A3XN3YOZ-8T1R8I8T", //no these dont actualy work
+                        apiSecret: "e1938fn37dn9a0dn2jmf09q4cvngh2387e4nan02o0enqandf029i824bq8c8m8s", //no these dont actualy work
+                        assets: {
+                            'usd': [ [Math.floor(d.valueOf() / 1000), 302.56] ],
+                            'btc': [ [Math.floor(d.valueOf() / 1000), 1.23] ],
+                            'ltc': [ [Math.floor(d.valueOf() / 1000), 1] ]
+                        }
+                    });
+                    return acc;
+                },
+                
+                'Has an `apiName`' : function(account) {
+                    assert.isString(account.apiName);
+                },
+                
+                'Has an `apiKey`' : function(account) {
+                    assert.isString(account.apiKey);
+                },
+                
+                'Has an `apiSecret`' : function(account) {
+                    assert.isString(account.apiSecret);
+                },
+                
+                'Has an Assets object that holds a map of account assets' : {
+                    topic: function(account) {
+                        assert.isObject(account.assets);
+                        return account.assets;
+                    },
+                    
+                    'that holds lists of daily balences' : function (assets) {
+                        for (var p in assets) {
+                            if (assets.hasOwnProperty(p)) {
+                                assert.isArray(assets[p]);
+                                for (var i = 0; i < assets[p].length; i++) {
+                                    assert.isArray(assets[p][i]);
+                                }
+                            }
+                        }
+                    }
+                }
+                
             }
 
         },
