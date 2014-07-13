@@ -20,7 +20,7 @@ module.exports = {
 
     dataDays: 30,
 
-    cookieSecret: "rybotcookiecat",
+    cookieSecret: "rybotcookiecat",   // CHANGE ME TO AN RANDOM STRING!
     cookieMaxAge: 1000 * 60 * 60 * 5, // 5 hours
 
     traderTradesSleep: 30

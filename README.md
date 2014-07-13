@@ -1,5 +1,6 @@
 RyBot: *The* Trade bot
 ===============
+[![Build Status](https://travis-ci.org/Ryex/RyBot_TradeBotsvg?branch=master)](https://travis-ci.org/Ryex/RyBot_TradeBot)
 ---
 
 RyBot is an API agnostic Tradebot for Crypto. First developed for use with BTC-e RyBot lets
