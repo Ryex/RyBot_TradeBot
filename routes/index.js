@@ -10,7 +10,6 @@ var passport = require('passport');
 var DB = rek('db');
 var gdb = DB.getDb;
 var config  = rek('config.js');
-var setup = rek('setup.js');
 
 var scribe = rek('scribe');
 

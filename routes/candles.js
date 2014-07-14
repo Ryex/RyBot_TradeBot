@@ -1,6 +1,6 @@
 var rek = require("rekuire");
 
-var DB = rek("DB");
+var DB = rek("db");
 var gdb = DB.getDb();
 
 module.exports = function(req, res){
@@ -16,9 +16,9 @@ module.exports = function(req, res){
             DB.log("candles_request", err)
             res.send({error: err});
         } else {
-            
+
             res.send(candles);
         }
     })
-    
+
 };

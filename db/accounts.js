@@ -39,9 +39,11 @@ accounts.Account = function(account_obj) {
     self.apiKey = account_obj.apiKey;
     self.apiSecret = account_obj.apiSecret;
     self.assets = account_obj.assets;
+    self._id = account_obj._id || new DB.ObjectID();
     
     self.save = function(cb) {
         var acc_obj = {
+            _id: self._id,
             apiName: self.apiName,
             accountName: self.accountName,
             apiKey: self.apiKey,
@@ -51,7 +53,7 @@ accounts.Account = function(account_obj) {
         }
         gdb().collection("accounts", function(err, collection) {
             if (err) return cb(err);
-            collection.update({accountName: self.accountName}, acc_obj, {upsert:true}, function(err, result) {
+            collection.update({_id: self._}, acc_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
               return cb(null, result);
             });
@@ -60,10 +62,10 @@ accounts.Account = function(account_obj) {
 
 }
 
-accounts.listAccounts = function(cb) {
+accounts.listAccounts = function(query, cb) {
     gdb().collection("accounts", function(err, collection) {
         if (err) return cb(err);
-        collection.find().toArray(function(err, accts) {
+        collection.find(query).toArray(function(err, accts) {
             if (err) return cb(err);
             cb(null, accts);
         });

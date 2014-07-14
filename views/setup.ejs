@@ -24,29 +24,29 @@
       <form class="form-horizontal" role="form" method="POST" action="/setup">
         <div class="row">
 
-          <div class="col-lg-8">
+          <div class="col-lg-8  col-md-8 col-sm-10">
 
             <div class="form-group">
               <h4>Admin User to Create</h4>
               
               <div class="form-group">  
-                <label for="user" class="col-lg-2 control-label">Username</label>
-                <div class="col-lg-6">  
+                <label for="user" class="col-lg-2 col-md-2 col-sm-3 control-label">Username</label>
+                <div class="col-lg-6 col-md-6 col-sm-7">  
                   <input type="text" class="form-control" name="user[name]" id="user" placeholder="Username" required autofocus />
-                </div>  
+                </div>
               </div>
 
               <div class="form-group">  
-                <label for="pass" class="col-lg-2 control-label">Password</label> 
-                <div class="col-lg-6"> 
+                <label for="pass" class="col-lg-2 col-md-2 col-sm-3 control-label">Password</label> 
+                <div class="col-lg-6 col-md-6 col-sm-7"> 
                   <input type="password" class="form-control" name="user[pass]" id="pass" placeholder="Password" required /> 
                 </div>
                 
               </div>
               
               <div  class="form-group">
-                <label for="pass" class="col-lg-2 control-label">Confirm Password</label> 
-                <div class="col-lg-6"> 
+                <label for="pass" class="col-lg-2 col-md-2 col-sm-3 control-label">Confirm Password</label> 
+                <div class="col-lg-6 col-md-6 col-sm-7"> 
                   <input type="password" class="form-control" name="user[pass_confirm]" id="pass" placeholder="Password" required /> 
                 </div>
               </div>
@@ -57,8 +57,8 @@
               <h4>Bot Settings</h4>
 
               <div class="form-group">  
-                <label for="name" class="col-lg-2 control-label">Bot Name</label>  
-                <div class="col-lg-10">
+                <label for="name" class="col-lg-2 col-md-2 col-sm-3 control-label">Bot Name</label>  
+                <div class="col-lg-6 col-md-6 col-sm-">
                   <input type="text" class="form-control" name="app[name]" id="name" placeholder="Name"  required 
                     <% if (config.name) { %>
                       value="<%=  config.name %>"
@@ -75,7 +75,7 @@
 
         
         <div class="form-group">  
-          <div class="col-lg-10">  
+          <div class="col-lg-10 col-md-10 col-sm-10">  
             <button type="submit" class="btn btn-primary" name="setup" value="setup">Submit</button>  
           </div>  
         </div>

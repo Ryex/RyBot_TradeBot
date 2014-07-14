@@ -74,6 +74,7 @@ DB
 
     Configs
         Has a Constructable `Config` object that ...
+            Has an `_id`
 ✓            Has a `botName` property
 ✓            Has a `main` property
 ✓            Has an asynchronous `save` function That returns it\'s success
@@ -86,6 +87,7 @@ DB
 ✓        Has a asynchronous `comparePassword` function that compairs a plain text password to a stored hashed password
 ✓        Has a asynchronous `removeUser` function that removes a user form the database by username
 ✓        Has a Constructable `User` object that...
+            Has an `_id`
 ✓            Has a `name`
 ✓            Has an all lowercase `username`
 ✓            Has an `admin` boolean
@@ -99,6 +101,7 @@ DB
     Accounts
 ✓        Has an asynchronous `listAccounts` function that lists accounts in the database
 ✓        Has a Constructable `Account` object that...
+            Has an `_id`
 ✓            Has an `accountName`
 ✓            Has an `apiName`
 ✓            Has an `apiKey`
@@ -111,6 +114,7 @@ DB
     Signals
 ✓        Has a asynchronous `listSignals` function that lists signals in the database for an account
 ✓        Has a Constructable `Signal` object that ...
+            Has an `_id`
 ✓            Has an `accountName`
 ✓            Has a `signalName`
 ✓            Has a  `pairName`
@@ -128,6 +132,7 @@ DB
     Pairs
 ✓        Has an asynchronous `listPairs` function that lists Pairs setup in the database
 ✓        Has a Constructable `Pair` object that...
+            Has an `_id`
 ✓            Has an `apiName`
 ✓            Has a `pairName`
 ✓            Has an `active` flag

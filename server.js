@@ -5,7 +5,9 @@
 
 
 // get app envierment setup
-var app_env = require('./env')
+var rek = require('rekuire');
+
+var app_env = rek('env')
 
 // get nodejs included modules
 var http = require('http');
@@ -13,36 +15,13 @@ var https = require('https');
 var path = require('path');
 
 // Logging
-var scribe = require(global.appdir + '/scribe');
-
-
-// get express and it's official middleware
-var express = require('express');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var expressSession = require('express-session');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var errorhandler = require('errorhandler');
-
-// 3ed party middleware
-var flash = require('connect-flash');
-var passport = require('passport');
-
-// get our routes
-var routes = require(global.appdir + '/routes');
-
-// get the function we need to set up
-var setup = require(global.appdir + '/setup.js');
-
-// load the configuration
-var config  = require(global.appdir + '/config.js');
+var scribe = rek('scribe');
 
 // configur logging
 
 scribe.configure(function(){
     scribe.set('app', 'RyBot_Trader');                  // NOTE Best way learn about these settings is
-    scribe.set('logPath', global.appdir + '/scribe');   // them out for yourself.
+    scribe.set('logPath', global.appdir + '/scribe');     // them out for yourself.
     scribe.set('defaultTag', 'DEFAULT_TAG');
     scribe.set('divider', ':::');
     scribe.set('identation', 5);                        // Identation before console messages
@@ -59,6 +38,29 @@ scribe.addLogger('realtime', true, true, 'underline');    // tag color)
 scribe.addLogger('high', true, true, 'magenta');
 scribe.addLogger('normal', true, true, 'white');
 scribe.addLogger('low', true, true, 'grey');
+
+
+// get express and it's official middleware
+var express = require('express');
+var morgan = require('morgan');
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
+var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
+var errorhandler = require('errorhandler');
+
+// 3ed party middleware
+var flash = require('connect-flash');
+var passport = require('passport');
+
+// get our routes
+var routes = rek('routes');
+
+// get the function we need to set up
+var startup = rek('startup.js');
+
+// load the configuration
+var config  = rek('config.js');
 
 
 // set up the express server
@@ -116,9 +118,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 routes.add_routes(app);
 
 
-setup.prepare( function(err, results){
+startup.prepare( function(err, results){
     if (err) { global.BAD_ERROR = err; }
-    var auth = require(global.appdir + '/auth.js');
+    var auth = rek('auth.js');
     if (config.runHTTPS) {
         http.createServer(app).listen(config.serverHTTPSPort, config.serverIp, function(){
             console.log('[Server] HTTPS Express server listening on ' + config.serverHTTPSIp + ":" + config.serverPort);

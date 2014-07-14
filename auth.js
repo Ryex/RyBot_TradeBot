@@ -3,7 +3,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var DB = require(global.appdir + '/db');
 var gdb = DB.getDb;
-var User = DB.User;
+var Users = DB.Users;
 var config  = require(global.appdir + '/config.js');
 
 
@@ -14,11 +14,12 @@ var config  = require(global.appdir + '/config.js');
 //   this will be as simple as storing the user ID when serializing, and finding
 //   the user by ID when deserializing.
 passport.serializeUser(function(user, done) {
+  console.log(user);
   done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
-  User.findByID(id, function (err, user) {
+  Users.findByID(id, function (err, user) {
     done(err, user);
   });
 });
@@ -35,10 +36,10 @@ passport.use(new LocalStrategy(
     // username, or the password is not correct, set the user to `false` to
     // indicate failure and set a flash message.  Otherwise, return the
     // authenticated `user`.
-    User.findByUsername(username, function(err, user) {
+    Users.findByUsername(username, function(err, user) {
       if (!user) return done(null, false, { message: 'Invalid Username/Password Pair'});
 
-      User.comparePassword(password, user, function(err, isMatch) {
+      user.testPassword(password, function(err, isMatch) {
         if (err) return done(err);
         if (!isMatch) {
           return done(null, false, { message: 'Invalid Username/Password Pair' });

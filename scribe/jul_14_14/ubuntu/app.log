@@ -1,0 +1,9 @@
+7:08:12 PM:::[Startup]Setup not needed
+7:08:12 PM:::[Server]HTTP Express server listening on 0.0.0.0:8080
+7:08:42 PM:::{
+7:08:42 PM:::    "name": "Ryex",
+7:08:42 PM:::    "username": "ryex",
+7:08:42 PM:::    "hash_password": "$2a$10$ILhdlUD5DaBPdBI4OJPnie1YH9zAesc3quVaI8dtPWkhEXfL9hS4a",
+7:08:42 PM:::    "_id": "53c36c6a540bfb96170232c7",
+7:08:42 PM:::    "admin": true
+7:08:42 PM:::}

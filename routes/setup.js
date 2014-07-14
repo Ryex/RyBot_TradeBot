@@ -4,83 +4,85 @@ var VError = require('verror');
 var async = require('async');
 var passport = require('passport');
 
-var DB = require('db');
+var DB = rek('db');
 var gdb = DB.getDb;
-var User = DB.User;
-var config  = rek('config.js');
-var setup = rek('setup.js');
+var Users = DB.Users;
+var Configs = DB.Configs;
+var CFG  = rek('config.js');
+var startup = rek('startup.js');
 
 var routes = rek('routes');
 
 module.exports = function(req, res){
     if (global.SETUP) {
         if (req.method === 'POST') {
-            var user = User.template(req.body.user.name);
-            user.password = req.body.user.pass;
-            user.password_confirm = req.body.user.pass_confirm;
-            user.admin = true;
+            var user = new Users.User({
+                name: req.body.user.name,
+                password: req.body.user.pass,
+                admin: true
+            });
 
-            var new_config = {};
-            new_config.main = true;
-            new_config.name = req.body.app.name;
+            var config = new Configs.Config({
+                main: true,
+                botName: req.body.app.name
+            });
 
-            var check_user = function(user) {
-                if (user.username && user.password) return true;
+            var check_user = function() {
+                if (req.body.user.name && req.body.user.pass) return true;
                 return false;
             };
             
-            var check_pass = function(user) {
-                if (user.password === user.password_confirm) return true;
-                return false;
-            }
-
-            var check_config =function(config) {
-                if (config.name) return true;
+            var check_pass = function() {
+                if (req.body.user.pass === req.body.user.pass_confirm) return true;
                 return false;
             };
 
-            if (check_user(user) && check_config(new_config)) {
+            var check_config =function(config) {
+                if (req.body.app.name) return true;
+                return false;
+            };
+
+            if (check_user() && check_config()) {
                 
                 if (check_pass(user)) {
-                    
-                    //prevent it form being saved
-                    delete user.password_confirm;
                     
                     var tasks = [];
 
                     tasks.push(function(cb){
                         // update the config
-                        gdb().collection("config", function(err, collection) {
-                            if (err) {
-                                return cb(err);
-                            } else {
-                                collection.update({main: true}, new_config, {upsert:true}, function(err, result) {
-                                    if (err) {
-                                        return cb(err);
-                                    } else {
-                                        return cb(null, result);
-                                    }
-                                });
-                            }
+                        config.save(function(err, result) {
+                            console.log("entering  save after", err, result)
+                            if (err) return cb(new VError(err, "Config failed to save"));
+                            if (!result) return cb(new Error("ERROR: Config failed to save"));
+                            return cb(null, result);
                         });
                     });
     
                     tasks.push(function(cb){
                         // add the admin user
-                        User.updateUser(user, cb);
+                        user.prepare(function(err, result) {
+                            if (err) return cb(new VError(err, "User preperation failed"));
+                            if (!result) return cb(new Error("ERROR: User preperation failed"));
+                            console.log("user prepare", user)
+                            user.save(function(err, result) {
+                                console.log("entering user save after", err, result)
+                                if (err) return cb(new  VError(err, "User failed to save"));
+                                if (!result) return cb(new Error("ERROR: User failed to save"));
+                                return cb(null, result);
+                            });
+                        });
                     });
     
-                    tasks.push(setup.configure);
-                    tasks.push(setup.ensure_users);
+                    tasks.push(startup.configure);
+                    tasks.push(startup.ensure_users);
     
                     async.series(tasks, function(err, results) {
-                        if (err) {
-                            var new_err  = new VError(err, "Could not save first time configuration");
-                            throw new_err;
-                        }
-    
+                        console.log("entering async after", err, results)
+                        if (err) throw new VError(err, "Could not save first time configuration");
+                        console.log("redirecting")
                         res.redirect('/');
-                    });  
+                    });
+                    
                 } else {
                     req.flash('error', 'Passwords do not match');
                     res.redirect('/');

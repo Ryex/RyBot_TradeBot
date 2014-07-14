@@ -6,10 +6,10 @@ var gdb = DB.getDb;
 var pairs;
 module.exports = pairs = {};
 
-pairs.listPairs = function(cb) {
+pairs.listPairs = function(query, cb) {
     gdb().collection("pairs", function(err, collection) {
         if (err) return cb(err);
-        collection.find().toArray(function(err, configs) {
+        collection.find(query).toArray(function(err, configs) {
             if (err) return cb(err);
             cb(null, configs);
         });
@@ -38,17 +38,19 @@ pairs.Pair = function(pair_obj) {
     self.apiName = pair_obj.apiName;
     self.pairName = pair_obj.pairName;
     self.active = pair_obj.active || false;
+    self._id = pair_obj._id || new DB.ObjectID();
     
     
     self.save = function(cb) {
         var pair_obj = {
+            _id: self._id,
             pairName: self.pairName,
             apiName: self.apiName,
             active: self.active
         }
         gdb().collection("pairs", function(err, collection) {
             if (err) return cb(err);
-            collection.update({pairName: self.pairName}, pair_obj, {upsert:true}, function(err, result) {
+            collection.update({_id: self._id}, pair_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
               return cb(null, result);
             });

@@ -23,16 +23,19 @@ cfg.Config = function(cfg_obj) {
 
     self.botName = cfg_obj.botName;
     self.main = cfg_obj.main;
+    self._id = cfg_obj._id || new DB.ObjectID();
 
     self.save = function (cb) {
         var cfg_obj = {
+            _id: self._id,
             botName: self.botName,
             main: self.main
         }
         gdb().collection("configs", function(err, collection) {
             if (err) return cb(err);
-            collection.update({main: self.main}, cfg_obj, {upsert:true}, function(err, result) {
+            collection.update({_id: self._id}, cfg_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
+              console.log("returning form config save")
               return cb(null, result);
             });
         });
@@ -40,10 +43,10 @@ cfg.Config = function(cfg_obj) {
 
 }
 
-cfg.listConfigs = function(cb) {
+cfg.listConfigs = function(query, cb) {
     gdb().collection("configs", function(err, collection) {
         if (err) return cb(err);
-        collection.find().toArray(function(err, configs) {
+        collection.find(query).toArray(function(err, configs) {
             if (err) return cb(err);
             cb(null, configs);
         });

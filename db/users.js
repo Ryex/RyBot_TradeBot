@@ -10,10 +10,10 @@ var bcrypt = require('bcrypt'),
 var Users, User;
 module.exports = Users = {};
 
-Users.listUsers = function(cb) {
+Users.listUsers = function(query, cb) {
     gdb().collection("users", function(err, collection) {
         if (err) return cb(err);
-        collection.find().toArray(function(err, users) {
+        collection.find(query).toArray(function(err, users) {
             if (err) return cb(err);
             cb(null, users);
         });
@@ -108,6 +108,7 @@ Users.User = User = function (user_obj) {
     self.name = user_obj.name;
     self.username = user_obj.name.toLowerCase();
     self.hash_password = user_obj.hash_password || null;
+    self._id = user_obj._id || new DB.ObjectID();
 
     var user_password = user_obj.password || null;
 
@@ -115,15 +116,17 @@ Users.User = User = function (user_obj) {
 
     self.save = function(cb) {
         var user_obj = {
+            _id: self._id,
             name: self.name,
             username: self.username,
             hash_password: self.hash_password,
             admin: self.admin
         }
         gdb().collection("users", function(err, collection) {
-            if (err)  return cb(err);
-            collection.update({username: user_obj.username}, user_obj, {upsert:true}, function(err, result) {
+            if (err) return cb(err);
+            collection.update({_id: self._id}, user_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
+              console.log("returning form user save")
               return cb(null, result);
             });
         });
@@ -132,7 +135,7 @@ Users.User = User = function (user_obj) {
     self.delete = function(cb) {
         gdb().collection("users", function(err, collection){
            if (err) return cb(err);
-           collection.remove({ username: self.username}, function(err, numRemoved) {
+           collection.remove({_id: self._id}, function(err, numRemoved) {
                if (err) return cb(err);
                if (numRemoved > 0) return cb(null, true);
                return cb(new Error("ERROR: User, `" + self.name + "` was not removed"));

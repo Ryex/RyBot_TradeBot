@@ -9,6 +9,8 @@ var rek = require('rekuire');
 var async = require('async');
 var VError = require('verror');
 var DB = rek('db');
+var Users = DB.Users;
+var Configs = DB.Configs
 var gdb = DB.getDb;
 var config = rek('config.js');
 
@@ -23,44 +25,29 @@ var template_config = {
 
 
 function configure(cb) {
-    gdb().collection("config", function(err, collection) {
-        if (err) { 
-            return cb(err);
+    Configs.listConfigs({main: true}, function(err, configs) {
+        if (err) return cb(err);
+        if (configs.length < 1) {
+            global.SETUP = true;
+            console.log("[Startup] Setup needed");
         } else {
-            collection.find().toArray(function(err, docs) {
-                if (err) { 
-                    return cb(err);
-                } else {
-                    if (docs.length < 1) {
-                        global.SETUP = true;
-                        console.warn("[Setup] Setup needed");
-                    } else {
-                        global.CONFIG = docs[0];
-                        global.SETUP = false;
-                        console.log("[Setup] Setup not needed");
-                    }
-                    return cb(null);
-                }
-            });
+            global.CONFIG = configs[0];
+            global.SETUP = false;
+            console.log("[Startup] Setup not needed");
         }
-    });
+        return cb(null, global.SETUP);
+    })
 }
 
 function ensure_users(cb) {
-    gdb().collection("users", function(err, collection) {
-        if (err) { 
-            return cb(err);
-        } else {
-            collection.find().toArray(function(err, users) {
-                if (err) return cb(err);
-                
-                if (users.length < 1 && !global.SETUP) {
-                    global.SETUP = true;
-                }
-                return cb(null);
-            });
+    Users.listUsers({}, function(err, users) {
+        if (err) return cb(err);
+        
+        if (users.length < 1 && !global.SETUP) {
+            global.SETUP = true;
         }
-    });
+        return cb(null,  global.SETUP);
+    })
 }
 
 /*
@@ -76,7 +63,7 @@ function setup_pairs(pairs, callback) {
         var min30_name = "30minute_" + pairs[i];
 
 
-        
+
 
         //add to task q
         tasks.push(function(cb){Db.createCollection(trades_name, cb);});
@@ -93,7 +80,7 @@ function setup_pairs(pairs, callback) {
     }
 
     // run all our tasks async but in series
-    async.series(tasks, function(err, results) {
+    async.series(tasks, function(err, results) {    
         if (err) {
             return callback(err);
         }
@@ -107,7 +94,7 @@ function setup_pairs(pairs, callback) {
 
 function prepare(callback) {
     // Establish connection to db
-    gdb().open(function(err, db) {
+    DB.open(function(err, db) {
         if (err) {
             var err1 = new VError(err, "Failed to Connect to Database");
             return callback(err1);
@@ -119,23 +106,16 @@ function prepare(callback) {
             tasks.push(configure);
             tasks.push(ensure_users);
 
-            var pairs = [];
-
-            for (var i = 0; i < global.CONFIGS.length; i++) {
-                for (var j = 0; j < global.CONFIGS[i].pairs.length; j++) {
-                    pairs.push(global.CONFIGS[i].pairs[j]);
-                }
-            }
 
             async.series(tasks, function(err, results) {
                 if (err) return callback(err);
                 return callback(null, results);
-            });   
+            });
         }
 
         if (config.dbUser !== "") {
             db.authenticate(config.dbUser, config.dbPass, {authdb: config.dbAuthName}, function(err, result) {
-                var new_err; 
+                var new_err;
                 if (err) {
                     new_err= new VError(err, "Failed to Authenticate with Database");
                     console.error(new_err);
@@ -147,13 +127,13 @@ function prepare(callback) {
                     return callback(new_err);
                 }
                 setup_db();
-            }); 
+            });
         } else {
             setup_db()
         }
-        
 
-        
+
+
     });
 
 }

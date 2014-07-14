@@ -6,10 +6,10 @@ var gdb = DB.getDb;
 var signals;
 module.exports = signals = {};
 
-signals.listSignals = function(account, cb) {
+signals.listSignals = function(query, cb) {
     gdb().collection("configs", function(err, collection) {
         if (err) return cb(err);
-        collection.find({accountName: account}).toArray(function(err, configs) {
+        collection.find(query).toArray(function(err, configs) {
             if (err) return cb(err);
             cb(null, configs);
         });
@@ -53,9 +53,11 @@ signals.Signal = function(sig_obj) {
     self.apiName = sig_obj.apiName;
     self.algorithm = sig_obj.algorithm;
     self.actions = sig_obj.actions;
+    self._id = sig_obj._id || new DB.ObjectID();
     
     self.save = function(cb) {
         var sig_obj = {
+            _id: self._id,
             accountName: self.accountName,
             signalName: self.signalName,
             pairName: self.pairName,
@@ -65,11 +67,7 @@ signals.Signal = function(sig_obj) {
         }
         gdb().collection("signals", function(err, collection) {
             if (err) return cb(err);
-            collection.update({
-                accountName: self.accountName,
-                signalName: self.signalName
-                
-            }, sig_obj, {upsert:true}, function(err, result) {
+            collection.update({_id: self._id}, sig_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
               return cb(null, result);
             });

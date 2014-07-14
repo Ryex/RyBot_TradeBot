@@ -220,7 +220,7 @@ vows.describe('DB').addBatch({
             'Has a asynchronous `listConfigs` function' : {
                 topic: function (configs) {
                     assert.isFunction(configs.listConfigs);
-                    configs.listConfigs(this.callback);
+                    configs.listConfigs({}, this.callback);
                 },
 
                 'that lists users in the database' : function(data) {
@@ -236,6 +236,10 @@ vows.describe('DB').addBatch({
                         main: true
                     });
                     return cfg;
+                },
+                
+                'Has an `_id`' : function(config) {
+                    assert.instanceOf(config._id, DB.ObjectID);
                 },
 
                 'Has a `botName` property' : function(config) {
@@ -289,7 +293,7 @@ vows.describe('DB').addBatch({
             'Has an asynchronous `listUsers` function' : {
                 topic: function (users) {
                     assert.isFunction(users.listUsers);
-                    users.listUsers(this.callback)
+                    users.listUsers({}, this.callback)
                 },
 
                 'that lists users in the database' : function(err, data) {
@@ -365,6 +369,10 @@ vows.describe('DB').addBatch({
                     assert.isFunction(users.User);
                     var u = new users.User({name:"test2", password:"test123", admin:false});
                     return u;
+                },
+                
+                'Has an `_id`' : function(user) {
+                    assert.instanceOf(user._id, DB.ObjectID);
                 },
 
                 'Has a `name`' : function(user) {
@@ -468,7 +476,7 @@ vows.describe('DB').addBatch({
             'Has an asynchronous `listAccounts` function' : {
                 topic: function (accounts) {
                     assert.isFunction(accounts.listAccounts);
-                    accounts.listAccounts(this.callback);
+                    accounts.listAccounts({}, this.callback);
                 },
 
                 'that lists accounts in the database' : function(err, data) {
@@ -493,6 +501,10 @@ vows.describe('DB').addBatch({
                         }
                     });
                     return acc;
+                },
+                
+                'Has an `_id`' : function(account) {
+                    assert.instanceOf(account._id, DB.ObjectID);
                 },
 
                 'Has an `accountName`' : function(account) {
@@ -581,6 +593,10 @@ vows.describe('DB').addBatch({
                     });
                     return sig;
                 },
+                
+                'Has an `_id`' : function(signal) {
+                    assert.instanceOf(signal._id, DB.ObjectID);
+                },
 
                 'Has an `accountName`' : function(signal) {
                     assert.isString(signal.accountName);
@@ -636,7 +652,7 @@ vows.describe('DB').addBatch({
             'Has an asynchronous `listPairs` function': {
                 topic: function(pairs) {
                     assert.isFunction(pairs.listPairs);
-                    pairs.listPairs(this.callback);
+                    pairs.listPairs({}, this.callback);
                 },
 
                 'that lists pairs set up in the database' : function(err, data) {
@@ -653,6 +669,10 @@ vows.describe('DB').addBatch({
                         active: true
                     });
                     return par;
+                },
+                
+                'Has an `_id`' : function(pair) {
+                    assert.instanceOf(pair._id, DB.ObjectID);
                 },
 
                 'Has an `apiName`' : function(pair) {
