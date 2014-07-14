@@ -15,25 +15,48 @@ accounts.Account = function(account_obj) {
     if (typeof(account_obj) != 'object') {
         throw new Error("Invalid type for `account_obj`: expected `object`, got `" + typeof(account_obj) + "`");
     }
+    
+    if (typeof(account_obj.accountName) != 'string') {
+        throw new Error("Invalid type for `account_obj.accountName`: expected `string`, got `" + typeof(account_obj.accountName) + "`");
+    }
 
     if (typeof(account_obj.apiName) != 'string') {
-        throw new Error("Invalid type for `apiName`: expected `string`, got `" + typeof(account_obj.apiName) + "`");
+        throw new Error("Invalid type for `account_obj.apiName`: expected `string`, got `" + typeof(account_obj.apiName) + "`");
     }
 
     if (typeof(account_obj.apiKey) != 'string') {
-        throw new Error("Invalid type for `name`: expected `string`, got `" + typeof(account_obj.apiKey) + "`");
+        throw new Error("Invalid type for `account_obj.name`: expected `string`, got `" + typeof(account_obj.apiKey) + "`");
     }
     
     if (typeof(account_obj.apiSecret) != 'string') {
-        throw new Error("Invalid type for `apiSecret`: expected `string`, got `" + typeof(account_obj.apiSecret) + "`");
+        throw new Error("Invalid type for `account_obj.apiSecret`: expected `string`, got `" + typeof(account_obj.apiSecret) + "`");
     }
     
     if (typeof(account_obj.assets) === 'undefined') account_obj.main = {};
 
     self.apiName = account_obj.apiName;
+    self.accountName = account_obj.accountName;
     self.apiKey = account_obj.apiKey;
     self.apiSecret = account_obj.apiSecret;
     self.assets = account_obj.assets;
+    
+    self.save = function(cb) {
+        var acc_obj = {
+            apiName: self.apiName,
+            accountName: self.accountName,
+            apiKey: self.apiKey,
+            apiSecret: self.apiSecret,
+            assets: self.assets
+
+        }
+        gdb().collection("accounts", function(err, collection) {
+            if (err) return cb(err);
+            collection.update({accountName: self.accountName}, acc_obj, {upsert:true}, function(err, result) {
+              if (err) return cb(err);
+              return cb(null, result);
+            });
+        });
+    }
 
 }
 

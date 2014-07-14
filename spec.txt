@@ -52,12 +52,32 @@ Aggregator
 
 
 DB
+    Database
+        Has `open` function
+        Has `close` function
+        Has `getDb` function
+        Has `forceTTLindex` function
+        Has `forceUnique` function
+        Has `forceP2` function
+        Has `createCollection` function
+        Has `Accounts` object
+        Has `Candles` object
+        Has `Configs` object
+        Has `Signals` object
+        Has `Pairs` object
+        Has `ObjectID` function
+        Has `Binary` function
+        Has `GridStore` function
+        Has `Grid` function
+        Has 'Code` function
+        Has `BSON` function
+
     Configs
         Has a Constructable `Config` object that ...
             Has a `botName` property
             Has a `main` property
             Has an asynchronous `save` function That returns it\'s success
-        
+
     Users
         Has a asynchronous `listUsers` function that lists users in the database
         Has a asynchronous `findByID` function that returns a user or an error
@@ -69,29 +89,47 @@ DB
             Has a `name`
             Has an all lowercase `username`
             Has an `admin` boolean
-            Has a asynchronous `save` function that updates the user in the database
-            Has a asynchronous `delete` function that removes a matching user from the database (only works with _ID)
-            Has a asynchronous `setPassword` function that takes a plain text password and saves a hased password with the user
-            Has a asynchronous `testPassword` function that tests a plain text pass with the saved hash pass
-            Has a asynchronous `prepare` function that will set up properties of the user like the hash_password
+            Has an asynchronous `save` function that updates the user in the database
+            Has an asynchronous `delete` function that removes a matching user from the database (only works with _ID)
+            Has an asynchronous `setPassword` function that takes a plain text password and saves a hased password with the user
+            Has an asynchronous `testPassword` function that tests a plain text pass with the saved hash pass
+            Has an asynchronous `prepare` function that will set up properties of the user like the hash_password
                 User has a `hash_password` property now
-    
+
     Accounts
-        Has a asynchronous `listAccounts` function that lists accounts in the database
+        Has an asynchronous `listAccounts` function that lists accounts in the database
         Has a Constructable `Account` object that...
+            Has an `accountName`
             Has an `apiName`
             Has an `apiKey`
             Has an `apiSecret`
             Has an Assets object that holds a map of account assets
                 that holds lists of daily balences
-    
+            Has an asynchronous `save` function
+                that returns the result
+
     Signals
-        Has a asynchronous `listSignals` function that lists signals in the database
+        Has a asynchronous `listSignals` function that lists signals in the database for an account
         Has a Constructable `Signal` object that ...
+            Has an `accountName`
+            Has a `signalName`
+            Has a  `pairName`
             Has an `apiName`
             Has an `algorithm`
-            Has some `data`
-            
+            Has an `actions` array
+            Has an asynchronous `save` function
+                that returns the result
+
+
     Candles
         Has a `fetch` function that can pull a range of candles
-            
+
+
+    Pairs
+        Has an asynchronous `listPairs` function that lists Pairs setup in the database
+        Has a Constructable `Pair` object that...
+            Has an `apiName`
+            Has a `pairName`
+            Has an `active` flag
+            Has an asynchronous `save` function
+                that returns the result

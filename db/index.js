@@ -41,7 +41,7 @@ DB.close = function() {
 }
 
 //force power of 2 allocation
-DB.forcep2 = function(name, cb){
+DB.forceP2 = function(name, cb){
     db.command( {collMod: name, usePowerOf2Sizes : true }, function(err, result) {
         if (err) { 
             return cb(err);
@@ -56,11 +56,23 @@ DB.forcep2 = function(name, cb){
 // ensure that TTL indexes exist
 DB.forceTTLindex = function(name, cb){
     db.collection(name, function(err, collection) {
-        if (err) {
-            return cb(err);
-        }
+        if (err) return cb(err);
         //expire after 30 days
         collection.ensureIndex({ "createdAt": 1 }, { expireAfterSeconds: 1000*60*60*24*config.dataDays}, function(err, indexName){
+            if (err) { 
+                return cb(err);
+            } else {
+                return cb(null, indexName);
+            }
+        })
+    })
+}
+
+DB.forceUnique = function(name, query, cb) {
+    db.collection(name, function(err, collection) {
+        if (err) return cb(err);
+        //expire after 30 days
+        collection.ensureIndex(query, { unique: true}, function(err, indexName){
             if (err) { 
                 return cb(err);
             } else {
@@ -87,7 +99,8 @@ DB.Accounts = require("./accounts");
 DB.Candles = require('./candles');
 DB.Configs = require('./configs')
 DB.Users = require('./users');
-DB.Signals = require('./signals')
+DB.Signals = require('./signals');
+DB.Pairs = require('./pairs');
 
 DB.ObjectID = ObjectID;
 DB.Binary = Binary;

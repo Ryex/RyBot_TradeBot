@@ -18,7 +18,7 @@ cfg.Config = function(cfg_obj) {
     if (typeof(cfg_obj.main) === 'undefined') cfg_obj.main = true;
     
     if (typeof(cfg_obj.botName) != 'string') {
-        throw new Error("Invalid type for `botName`: expected `string`, got `" + typeof(cfg_obj.botName) + "`");
+        throw new Error("Invalid type for `cgf_obj.botName`: expected `string`, got `" + typeof(cfg_obj.botName) + "`");
     }
 
     self.botName = cfg_obj.botName;

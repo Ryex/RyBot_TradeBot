@@ -10,6 +10,85 @@ var gdb = DB.getDb
 var test_user_ID;
 
 vows.describe('DB').addBatch({
+    'Database' : {
+        topic : function() {
+            return DB;
+        },
+
+        'Has `open` function' : function(db) {
+           assert.isFunction(db.open);
+        },
+
+        'Has `close` function' : function(db) {
+            assert.isFunction(db.close);
+        },
+
+        'Has `getDb` function' : function(db) {
+            assert.isFunction(db.getDb);
+        },
+
+        'Has `forceTTLindex` function' : function(db) {
+            assert.isFunction(db.forceTTLindex);
+        },
+
+        'Has `forceUnique` function' : function(db) {
+            assert.isFunction(db.forceUnique);
+        },
+
+        'Has `forceP2` function' : function(db) {
+            assert.isFunction(db.forceP2);
+        },
+
+        'Has `createCollection` function' : function(db) {
+            assert.isFunction(db.createCollection);
+        },
+
+        'Has `Accounts` object' : function(db) {
+            assert.isObject(db.Accounts);
+        },
+
+        'Has `Candles` object' : function(db) {
+            assert.isObject(db.Candles);
+        },
+
+        'Has `Configs` object' : function(db) {
+            assert.isObject(db.Configs);
+        },
+
+        'Has `Signals` object' : function(db) {
+            assert.isObject(db.Signals);
+        },
+
+        'Has `Pairs` object' : function(db) {
+            assert.isObject(db.Pairs);
+        },
+
+        'Has `ObjectID` function' : function(db) {
+            assert.isFunction(db.ObjectID);
+        },
+
+        'Has `Binary` function' : function(db) {
+            assert.isFunction(db.Binary);
+        },
+
+        'Has `GridStore` function' : function(db) {
+            assert.isFunction(db.GridStore);
+        },
+
+        'Has `Grid` function' : function(db) {
+            assert.isFunction(db.Grid);
+        },
+
+        'Has `Code` function' : function(db) {
+            assert.isFunction(db.Code);
+        },
+
+        'Has `BSON` function' : function(db) {
+            assert.isFunction(db.BSON);
+        }
+
+    }
+}).addBatch({
 
     'Database' : {
         topic : function () {
@@ -86,14 +165,16 @@ vows.describe('DB').addBatch({
                     gdb().collection("accounts", function(err, collection) {
                         //test error opening collection
                         if (err) return cb(err);
-
+                        var d = new Date();
                         var account_objs = [
                             {
                                 apiName: "btce",
-                                apiKey: "test123",
+                                apiKey: "46G9R9D6-WJ77XOIP-XH9HH5VQ-A3XN3YOZ-8T1R8I8T", //no these dont actualy work
+                                apiSecret: "e1938fn37dn9a0dn2jmf09q4cvngh2387e4nan02o0enqandf029i824bq8c8m8s", //no these dont actualy work
                                 assets: {
-                                    usd: 0.0,
-                                    btc: 0.0
+                                    'usd': [ [Math.floor(d.valueOf() / 1000), 302.56] ],
+                                    'btc': [ [Math.floor(d.valueOf() / 1000), 1.23] ],
+                                    'ltc': [ [Math.floor(d.valueOf() / 1000), 1] ]
                                 }
                             }
                         ];
@@ -181,7 +262,7 @@ vows.describe('DB').addBatch({
                         assert.isFunction(config.save);
                         config.save(this.callback);
                     },
-                    
+
                     'That returns it\'s success' : function(err, result) {
                         assert.isNull(err);
                         assert.equal(result, true);
@@ -197,7 +278,7 @@ vows.describe('DB').addBatch({
                 return DB.Users
             },
 
-            'Has a asynchronous `listUsers` function' : {
+            'Has an asynchronous `listUsers` function' : {
                 topic: function (users) {
                     assert.isFunction(users.listUsers);
                     users.listUsers(this.callback)
@@ -208,7 +289,7 @@ vows.describe('DB').addBatch({
                 }
             },
 
-            'Has a asynchronous `findByID` function' : {
+            'Has an asynchronous `findByID` function' : {
                 topic: function(users) {
                     assert.isFunction(users.findByID);
                     users.findByID(test_user_ID, this.callback);
@@ -220,7 +301,7 @@ vows.describe('DB').addBatch({
                 }
             },
 
-            'Has a asynchronous `findByUsername` function' : {
+            'Has an asynchronous `findByUsername` function' : {
                 topic: function(users) {
                     assert.isFunction(users.findByUsername);
                     users.findByUsername("test", this.callback);
@@ -233,7 +314,7 @@ vows.describe('DB').addBatch({
 
             },
 
-            'Has a asynchronous `hashPassword` function that takes a plain text password' : {
+            'Has an asynchronous `hashPassword` function that takes a plain text password' : {
                 topic: function(users) {
                     assert.isFunction(users.hashPassword);
                     users.hashPassword("test123", this.callback);
@@ -245,7 +326,7 @@ vows.describe('DB').addBatch({
                 }
             },
 
-            'Has a asynchronous `comparePassword` function that compairs a plain text password to a stored hashed password' : {
+            'Has an asynchronous `comparePassword` function that compairs a plain text password to a stored hashed password' : {
                 topic: function(users) {
                     assert.isFunction(users.comparePassword);
                     users.comparePassword("test123", "$2a$10$Bfkwf/5Z1PRoUegVUm86Z.61Tr1DlD6FNuZnLOgZCoJq6UYkHKP/e", this.callback);
@@ -258,7 +339,7 @@ vows.describe('DB').addBatch({
             },
 
 
-            'Has a asynchronous `removeUser` function ' : {
+            'Has an asynchronous `removeUser` function ' : {
                 topic: function(users) {
                     assert.isFunction(users.removeUser);
                     users.removeUser("test", this.callback);
@@ -305,7 +386,7 @@ vows.describe('DB').addBatch({
 
                 },
 
-                'Has a asynchronous `delete` function' : {
+                'Has an asynchronous `delete` function' : {
                     topic: function(user) {
                         var self = this;
                         assert.isFunction(user.delete)
@@ -323,7 +404,7 @@ vows.describe('DB').addBatch({
                     }
                 },
 
-                'Has a asynchronous `setPassword` function that takes a plain text password' : {
+                'Has an asynchronous `setPassword` function that takes a plain text password' : {
                     topic: function(user) {
                         assert.isFunction(user.setPassword);
                         user.setPassword("test123", this.callback);
@@ -336,7 +417,7 @@ vows.describe('DB').addBatch({
 
                 },
 
-                'Has a asynchronous `testPassword` function' : {
+                'Has an asynchronous `testPassword` function' : {
                     topic: function(user) {
                         var self = this;
                         assert.isFunction(user.testPassword);
@@ -353,7 +434,7 @@ vows.describe('DB').addBatch({
                     }
                 },
 
-                'Has a asynchronous `prepare` function that will set up properties of the user like the hash_password' : {
+                'Has an asynchronous `prepare` function that will set up properties of the user like the hash_password' : {
                     topic: function(user) {
                         this.user = user;
                         assert.isFunction(user.prepare);
@@ -375,24 +456,25 @@ vows.describe('DB').addBatch({
             topic : function(results) {
                 return DB.Accounts;
             },
-            
-            'Has a asynchronous `listAccounts` function' : {
+
+            'Has an asynchronous `listAccounts` function' : {
                 topic: function (accounts) {
                     assert.isFunction(accounts.listAccounts);
                     accounts.listAccounts(this.callback);
                 },
-                
+
                 'that lists accounts in the database' : function(err, data) {
                     assert.isNull(err);
                     assert.isArray(data);
                 }
             },
-            
+
             'Has a Constructable `Account` object that...' : {
                 topic : function(accounts) {
                     assert.isFunction(accounts.Account);
                     var d = new Date();
                     var acc = new accounts.Account({
+                        accountName: "testAccount",
                         apiName: "btce",
                         apiKey: "46G9R9D6-WJ77XOIP-XH9HH5VQ-A3XN3YOZ-8T1R8I8T", //no these dont actualy work
                         apiSecret: "e1938fn37dn9a0dn2jmf09q4cvngh2387e4nan02o0enqandf029i824bq8c8m8s", //no these dont actualy work
@@ -404,25 +486,29 @@ vows.describe('DB').addBatch({
                     });
                     return acc;
                 },
-                
+
+                'Has an `accountName`' : function(account) {
+                    assert.isString(account.accountName);
+                },
+
                 'Has an `apiName`' : function(account) {
                     assert.isString(account.apiName);
                 },
-                
+
                 'Has an `apiKey`' : function(account) {
                     assert.isString(account.apiKey);
                 },
-                
+
                 'Has an `apiSecret`' : function(account) {
                     assert.isString(account.apiSecret);
                 },
-                
+
                 'Has an Assets object that holds a map of account assets' : {
                     topic: function(account) {
                         assert.isObject(account.assets);
                         return account.assets;
                     },
-                    
+
                     'that holds lists of daily balences' : function (assets) {
                         for (var p in assets) {
                             if (assets.hasOwnProperty(p)) {
@@ -433,8 +519,20 @@ vows.describe('DB').addBatch({
                             }
                         }
                     }
+                },
+
+                'Has an asynchronous `save` function' :  {
+                    topic: function(account) {
+                        assert.isFunction(account.save);
+                        account.save(this.callback);
+                    },
+
+                    'That returns it\'s success' : function(err, result) {
+                        assert.isNull(err);
+                        assert.equal(result, true);
+                    }
                 }
-                
+
             }
 
         },
@@ -442,6 +540,74 @@ vows.describe('DB').addBatch({
         'Signals' : {
             topic : function(results) {
                 return DB.Signals;
+            },
+
+            'Has an asynchronous `listSignals` function' : {
+                topic : function(signals) {
+                    assert.isFunction(signals.listSignals);
+                    signals.listSignals({}, this.callback);
+                },
+
+                'that lists signals in the database for an account' : function(err, data){
+                    assert.isNull(err);
+                    assert.isArray(data);
+                }
+            },
+
+            'Has a Constructable `Signal` object that...' : {
+                topic: function(signals) {
+                    assert.isFunction(signals.Signal);
+                    var sig = new signals.Signal({
+                        accountName: "testAccount",
+                        pairName: "btc_usd",
+                        apiName: "btce",
+                        algorithm: "SMA",
+                        actions: [
+                            {
+                                buy: {
+                                    btc: "10%"
+                                }
+                            }
+                        ]
+                    });
+                    return sig;
+                },
+
+                'Has an `accountName`' : function(signal) {
+                    assert.isString(signal.accountName);
+                },
+
+                'Has a `signalName`' : function(signal) {
+                    assert.isString(signal.signalName);
+                },
+
+                'Has a  `pairName`' : function(signal) {
+                    assert.isString(signal.pairName);
+                },
+
+                'Has an `apiName`' : function(signal) {
+                    assert.isString(signal.apiName);
+                },
+
+                'Has an `algorithm`' : function(signal) {
+                    assert.isString(signal.algorithm);
+                },
+
+                'Has an `actions` array' : function(signal) {
+                    assert.isArray(signal.actions);
+                },
+
+                'Has an asynchronous `save` function' :  {
+                    topic: function(signal) {
+                        assert.isFunction(signal.save);
+                        signal.save(this.callback);
+                    },
+
+                    'That returns it\'s success' : function(err, result) {
+                        assert.isNull(err);
+                        assert.equal(result, true);
+                    }
+                }
             }
 
         },
@@ -451,6 +617,59 @@ vows.describe('DB').addBatch({
                 return DB.Candles;
             }
 
+        },
+
+        'Pairs' : {
+            topic : function(results) {
+                return DB.Pairs;
+            },
+
+            'Has an asynchronous `listPairs` function': {
+                topic: function(pairs) {
+                    assert.isFunction(pairs.listPairs);
+                    pairs.listPairs(this.callback);
+                },
+
+                'that lists pairs set up in the database' : function(err, data) {
+                    assert.isNull(err);
+                    assert.isArray(data);
+                }
+            },
+
+            'Has a Constructable `Pair` object that...' : {
+                topic: function(pairs) {
+                    var par = new pairs.Pair({
+                        pairName: "btc_usd",
+                        apiName: "btce",
+                        active: true
+                    });
+                    return par;
+                },
+
+                'Has an `apiName`' : function(pair) {
+                    assert.isString(pair.apiName);
+                },
+
+                'Has a `pairName`' : function(pair) {
+                    assert.isString(pair.pairName);
+                },
+
+                'Has an `active` flag' : function(pair) {
+                    assert.isBoolean(pair.active);
+                },
+
+                'Has an asynchronous `save` function' :  {
+                    topic: function(pair) {
+                        assert.isFunction(pair.save);
+                        pair.save(this.callback);
+                    },
+
+                    'That returns it\'s success' : function(err, result) {
+                        assert.isNull(err);
+                        assert.equal(result, true);
+                    }
+                }
+            }
         },
 
         teardown: function(topic) {

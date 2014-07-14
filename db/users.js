@@ -88,19 +88,19 @@ Users.User = User = function (user_obj) {
     if (typeof(user_obj.admin) === 'undefined') user_obj.admin = false;
 
     if (typeof(user_obj.name) != 'string') {
-        throw new Error("Invalid type for `name`: expected `string`, got `" + typeof(user_obj.name) + "`");
+        throw new Error("Invalid type for `user_obj.name`: expected `string`, got `" + typeof(user_obj.name) + "`");
     }
 
     if (typeof(user_obj.password) != 'undefined' && typeof(user_obj.password) != 'string' ) {
-        throw new Error("Invalid type for `password`: expected `string`, got `" + typeof(user_obj.password) + "`");
+        throw new Error("Invalid type for `user_obj.password`: expected `string`, got `" + typeof(user_obj.password) + "`");
     }
 
     if (typeof(user_obj.hash_password) != 'undefined' && typeof(user_obj.hash_password) != 'string' ) {
-        throw new Error("Invalid type for `hash_password`: expected `string`, got `" + typeof(user_obj.hash_password) + "`");
+        throw new Error("Invalid type for `user_obj.hash_password`: expected `string`, got `" + typeof(user_obj.hash_password) + "`");
     }
 
     if (typeof(user_obj.admin) != 'boolean') {
-        throw new Error("Invalid type for `admin`: expected `boolean`, got `" + typeof(name) + "`");
+        throw new Error("Invalid type for `user_obj.admin`: expected `boolean`, got `" + typeof(name) + "`");
     }
 
     var self = this;
