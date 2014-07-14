@@ -34,6 +34,8 @@ scribe.configure(function(){
 });
 
 scribe.addLogger("log", true , true, 'green');            // (name, save to file, print to console,
+scribe.addLogger("warn", true , true, 'orange');
+scribe.addLogger("error", true , true, 'red');
 scribe.addLogger('realtime', true, true, 'underline');    // tag color)
 scribe.addLogger('high', true, true, 'magenta');
 scribe.addLogger('normal', true, true, 'white');
@@ -119,7 +121,10 @@ routes.add_routes(app);
 
 
 startup.prepare( function(err, results){
-    if (err) { global.BAD_ERROR = err; }
+    if (err) {
+        global.BAD_ERROR = err;
+        console.error("[Startup]", err.stack);
+    }
     var auth = rek('auth.js');
     if (config.runHTTPS) {
         http.createServer(app).listen(config.serverHTTPSPort, config.serverIp, function(){

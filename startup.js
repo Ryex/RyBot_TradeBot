@@ -29,7 +29,7 @@ function configure(cb) {
         if (err) return cb(err);
         if (configs.length < 1) {
             global.SETUP = true;
-            console.log("[Startup] Setup needed");
+            console.warn("[Startup] Setup needed");
         } else {
             global.CONFIG = configs[0];
             global.SETUP = false;

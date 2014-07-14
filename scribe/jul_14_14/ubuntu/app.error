@@ -1,0 +1,15 @@
+7:15:18 PM:::[Startup]{ jse_shortmsg: 'Failed to Connect to Database',
+7:15:18 PM:::[Startup]  jse_summary: 'Failed to Connect to Database: failed to connect to [0.0.0.0:27017]',
+7:15:18 PM:::[Startup]  jse_cause: [Error: failed to connect to [0.0.0.0:27017]],
+7:15:18 PM:::[Startup]  message: 'Failed to Connect to Database: failed to connect to [0.0.0.0:27017]' }
+7:16:32 PM:::[Startup]VError: Failed to Connect to Database: failed to connect to [0.0.0.0:27017]
+7:16:32 PM:::[Startup]    at module.exports.prepare (/home/ubuntu/workspace/startup.js:99:24)
+7:16:32 PM:::[Startup]    at DB.open (/home/ubuntu/workspace/db/index.js:28:25)
+7:16:32 PM:::[Startup]    at MongoClient.open (/home/ubuntu/workspace/node_modules/mongodb/lib/mongodb/mongo_client.js:99:20)
+7:16:32 PM:::[Startup]    at Db.open.self.serverConfig.connect.self._state (/home/ubuntu/workspace/node_modules/mongodb/lib/mongodb/db.js:283:18)
+7:16:32 PM:::[Startup]    at Db.close (/home/ubuntu/workspace/node_modules/mongodb/lib/mongodb/db.js:361:18)
+7:16:32 PM:::[Startup]    at Server.close (/home/ubuntu/workspace/node_modules/mongodb/lib/mongodb/connection/server.js:192:38)
+7:16:32 PM:::[Startup]    at Db.close (/home/ubuntu/workspace/node_modules/mongodb/lib/mongodb/db.js:357:21)
+7:16:32 PM:::[Startup]    at Db.open (/home/ubuntu/workspace/node_modules/mongodb/lib/mongodb/db.js:281:21)
+7:16:32 PM:::[Startup]    at Server.connect.connectionPool.on.server._serverState (/home/ubuntu/workspace/node_modules/mongodb/lib/mongodb/connection/server.js:556:7)
+7:16:32 PM:::[Startup]    at EventEmitter.emit (events.js:106:17)
