@@ -2,123 +2,123 @@ SPEC:
 
 
 API
-    BTC-e
-        Exists
-        Has a list of possible pairs
-        Has a Public API
+✓    BTC-e
+✓        Exists
+✓        Has a list of possible pairs
+✓        Has a Public API
             That ...
-                Can be constructed
+✓                Can be constructed
                 Has a function `trades` that when called asynchronously returns
-                    a list of trades
+✓                    a list of trades
                 Has a function `ticker` that when called asynchronously returns
-                    a ticker object
+✓                    a ticker object
                 Has a function `fee` that when called asynchronously returns
-                    a number
+✓                    a number
                 Has a function `depth` that when called asynchronusly returns
-                    a list of asks
-                    a list of bids
+✓                    a list of asks
+✓                    a list of bids
         Has Private API
             That ...
-                Can be constructed
-                Responds to `fee`
-                Responds to `ticker`
-                Responds to `trades`
-                Responds to `depth`
-                Responds to `getInfo`
-                Responds to `transHistory`
-                Responds to `tradeHistory`
-                Responds to `activeOrders`
-                Responds to `trade`
-                Responds to `cancelOrder`
+✓                Can be constructed
+✓                Responds to `fee`
+✓                Responds to `ticker`
+✓                Responds to `trades`
+✓                Responds to `depth`
+✓                Responds to `getInfo`
+✓                Responds to `transHistory`
+✓                Responds to `tradeHistory`
+✓                Responds to `activeOrders`
+✓                Responds to `trade`
+✓                Responds to `cancelOrder`
 
 
 Aggregator
     Has a `active_intervals` function
-        that returns a list of named intervals
+✓        that returns a list of named intervals
     Has have a `add` method
-        that accepts a name, a refresh time out, an API function, and a process function
+✓        that accepts a name, a refresh time out, an API function, and a process function
     Has a `remove` function
-        that takes a name and removes the interval
+✓        that takes a name and removes the interval
     Should have Process functions for
         Assets
-            Profit
+✓            Profit
         Pairs
-            Trades
-            Candles
+✓            Trades
+✓            Candles
             Signals
-                SMA
-                WMA
-                EMA
+✓                SMA
+✓                WMA
+✓                EMA
 
 
 DB
     Database
-        Has `open` function
-        Has `close` function
-        Has `getDb` function
-        Has `forceTTLindex` function
-        Has `forceUnique` function
-        Has `forceP2` function
-        Has `createCollection` function
-        Has `Accounts` object
-        Has `Candles` object
-        Has `Configs` object
-        Has `Signals` object
-        Has `Pairs` object
-        Has `ObjectID` function
-        Has `Binary` function
-        Has `GridStore` function
-        Has `Grid` function
-        Has 'Code` function
-        Has `BSON` function
+✓        Has `open` function
+✓        Has `close` function
+✓        Has `getDb` function
+✓        Has `forceTTLindex` function
+✓        Has `forceUnique` function
+✓        Has `forceP2` function
+✓        Has `createCollection` function
+✓        Has `Accounts` object
+✓        Has `Candles` object
+✓        Has `Configs` object
+✓        Has `Signals` object
+✓        Has `Pairs` object
+✓        Has `ObjectID` function
+✓        Has `Binary` function
+✓        Has `GridStore` function
+✓        Has `Grid` function
+✓        Has 'Code` function
+✓        Has `BSON` function
 
     Configs
         Has a Constructable `Config` object that ...
-            Has a `botName` property
-            Has a `main` property
-            Has an asynchronous `save` function That returns it\'s success
+✓            Has a `botName` property
+✓            Has a `main` property
+✓            Has an asynchronous `save` function That returns it\'s success
 
     Users
-        Has a asynchronous `listUsers` function that lists users in the database
-        Has a asynchronous `findByID` function that returns a user or an error
-        Has a asynchronous `findByUsername` function that returns a error
-        Has a asynchronous `hashPassword` function that takes a plain text password and returns a hashed version
-        Has a asynchronous `comparePassword` function that compairs a plain text password to a stored hashed password
-        Has a asynchronous `removeUser` function that removes a user form the database by username
-        Has a Constructable `User` object that...
-            Has a `name`
-            Has an all lowercase `username`
-            Has an `admin` boolean
-            Has an asynchronous `save` function that updates the user in the database
-            Has an asynchronous `delete` function that removes a matching user from the database (only works with _ID)
-            Has an asynchronous `setPassword` function that takes a plain text password and saves a hased password with the user
-            Has an asynchronous `testPassword` function that tests a plain text pass with the saved hash pass
-            Has an asynchronous `prepare` function that will set up properties of the user like the hash_password
-                User has a `hash_password` property now
+✓        Has a asynchronous `listUsers` function that lists users in the database
+✓        Has a asynchronous `findByID` function that returns a user or an error
+✓        Has a asynchronous `findByUsername` function that returns a error
+✓        Has a asynchronous `hashPassword` function that takes a plain text password and returns a hashed version
+✓        Has a asynchronous `comparePassword` function that compairs a plain text password to a stored hashed password
+✓        Has a asynchronous `removeUser` function that removes a user form the database by username
+✓        Has a Constructable `User` object that...
+✓            Has a `name`
+✓            Has an all lowercase `username`
+✓            Has an `admin` boolean
+✓            Has an asynchronous `save` function that updates the user in the database
+✓            Has an asynchronous `delete` function that removes a matching user from the database (only works with _ID)
+✓            Has an asynchronous `setPassword` function that takes a plain text password and saves a hased password with the user
+✓            Has an asynchronous `testPassword` function that tests a plain text pass with the saved hash pass
+✓            Has an asynchronous `prepare` function that will set up properties of the user like the hash_password
+✓                User has a `hash_password` property now
 
     Accounts
-        Has an asynchronous `listAccounts` function that lists accounts in the database
-        Has a Constructable `Account` object that...
-            Has an `accountName`
-            Has an `apiName`
-            Has an `apiKey`
-            Has an `apiSecret`
+✓        Has an asynchronous `listAccounts` function that lists accounts in the database
+✓        Has a Constructable `Account` object that...
+✓            Has an `accountName`
+✓            Has an `apiName`
+✓            Has an `apiKey`
+✓            Has an `apiSecret`
             Has an Assets object that holds a map of account assets
-                that holds lists of daily balences
+✓                that holds lists of daily balences
             Has an asynchronous `save` function
-                that returns the result
+✓                that returns the result
 
     Signals
-        Has a asynchronous `listSignals` function that lists signals in the database for an account
-        Has a Constructable `Signal` object that ...
-            Has an `accountName`
-            Has a `signalName`
-            Has a  `pairName`
-            Has an `apiName`
-            Has an `algorithm`
-            Has an `actions` array
-            Has an asynchronous `save` function
-                that returns the result
+✓        Has a asynchronous `listSignals` function that lists signals in the database for an account
+✓        Has a Constructable `Signal` object that ...
+✓            Has an `accountName`
+✓            Has a `signalName`
+✓            Has a  `pairName`
+✓            Has an `apiName`
+✓            Has an `algorithm`
+✓            Has an `actions` array
+✓            Has an asynchronous `save` function
+✓                that returns the result
 
 
     Candles
@@ -126,10 +126,10 @@ DB
 
 
     Pairs
-        Has an asynchronous `listPairs` function that lists Pairs setup in the database
-        Has a Constructable `Pair` object that...
-            Has an `apiName`
-            Has a `pairName`
-            Has an `active` flag
-            Has an asynchronous `save` function
-                that returns the result
+✓        Has an asynchronous `listPairs` function that lists Pairs setup in the database
+✓        Has a Constructable `Pair` object that...
+✓            Has an `apiName`
+✓            Has a `pairName`
+✓            Has an `active` flag
+✓            Has an asynchronous `save` function
+✓                that returns the result

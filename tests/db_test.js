@@ -7,8 +7,6 @@ var app_env = rek('env')
 var DB = rek('db');
 var gdb = DB.getDb
 
-var test_user_ID;
-
 vows.describe('DB').addBatch({
     'Database' : {
         topic : function() {
@@ -135,13 +133,6 @@ vows.describe('DB').addBatch({
 
                         var user_objs = [
                             {
-                                name: "Test",
-                                username: "test",
-                                password: "$2a$10$Bfkwf/5Z1PRoUegVUm86Z.61Tr1DlD6FNuZnLOgZCoJq6UYkHKP/e",
-                                admin: false
-
-                            },
-                            {
                                 name: "Admin",
                                 username: "admin",
                                 password: "$2a$10$Bfkwf/5Z1PRoUegVUm86Z.61Tr1DlD6FNuZnLOgZCoJq6UYkHKP/e",
@@ -152,8 +143,6 @@ vows.describe('DB').addBatch({
                         collection.insert( user_objs, function(err, result) {
                             // test error updating user
                             if (err) return cb(err);
-
-                            test_user_ID = result[0]._id
 
                             return cb(null, result);
                         });
@@ -275,7 +264,26 @@ vows.describe('DB').addBatch({
 
         'Users' : {
             topic : function(results) {
-                return DB.Users
+            var self = this;
+                var usr_obj = {
+                    name: "Test",
+                    username: "test",
+                    password: "$2a$10$Bfkwf/5Z1PRoUegVUm86Z.61Tr1DlD6FNuZnLOgZCoJq6UYkHKP/e",
+                    admin: false
+
+                };
+                gdb().collection("users", function(err, collection) {
+                    var cb = self.callback;
+                    //test error opening collection
+                    if (err) return cb(err);
+
+                    collection.insert( usr_obj, function(err, result) {
+                        // test error updating user
+                        if (err) return cb(err);
+                        self.test_user_ID = result[0]._id;
+                        return cb(null, DB.Users);
+                    });
+                });
             },
 
             'Has an asynchronous `listUsers` function' : {
@@ -292,7 +300,7 @@ vows.describe('DB').addBatch({
             'Has an asynchronous `findByID` function' : {
                 topic: function(users) {
                     assert.isFunction(users.findByID);
-                    users.findByID(test_user_ID, this.callback);
+                    users.findByID(this.test_user_ID, this.callback);
                 },
 
                 'that returns a user' : function(err, data) {
@@ -559,6 +567,7 @@ vows.describe('DB').addBatch({
                     assert.isFunction(signals.Signal);
                     var sig = new signals.Signal({
                         accountName: "testAccount",
+                        signalName: "testSignal",
                         pairName: "btc_usd",
                         apiName: "btce",
                         algorithm: "SMA",

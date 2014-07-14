@@ -23,23 +23,23 @@ signals.Signal = function(sig_obj) {
         throw new Error("Invalid type for `sig_obj`: expected `object`, got `" + typeof(sig_obj) + "`");
     }
     
-    if (typeof(sig_obj.accountName != 'string')) {
+    if (typeof(sig_obj.accountName) != 'string') {
         throw new Error("Invalid type for `sig_obj.accountName`: expected `string` got `" + typeof(sig_obj.accountName) + "`");
     }
     
-    if (typeof(sig_obj.signalName != 'string')) {
+    if (typeof(sig_obj.signalName) != 'string') {
         throw new Error("Invalid type for `sig_obj.signalName`: expected `string` got `" + typeof(sig_obj.signalName) + "`");
     }
     
-    if (typeof(sig_obj.pairName != 'string')) {
+    if (typeof(sig_obj.pairName) != 'string') {
         throw new Error("Invalid type for `sig_obj.pairName`: expected `string` got `" + typeof(sig_obj.pairName) + "`");
     }
     
-    if (typeof(sig_obj.apiName != 'string')) {
+    if (typeof(sig_obj.apiName) != 'string') {
         throw new Error("Invalid type for `sig_obj.apiName`: expected `string` got `" + typeof(sig_obj.apiName) + "`");
     }
     
-    if (typeof(sig_obj.algorithm != 'string')) {
+    if (typeof(sig_obj.algorithm) != 'string') {
         throw new Error("Invalid type for `sig_obj.algorithm`: expected `string` got `" + typeof(sig_obj.algorithm) + "`");
     }
     
