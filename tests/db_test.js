@@ -316,7 +316,7 @@ vows.describe('DB').addBatch({
             'Has an asynchronous `findByUsername` function' : {
                 topic: function(users) {
                     assert.isFunction(users.findByUsername);
-                    users.findByUsername("test", this.callback);
+                    users.findByUsername("admin", this.callback);
                 },
 
                 'that returns a user' : function(err, data) {

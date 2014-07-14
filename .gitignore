@@ -5,3 +5,4 @@ RyBot.sublime*
 *.png
 mongod
 /.*
+/scribe/*_*_*
