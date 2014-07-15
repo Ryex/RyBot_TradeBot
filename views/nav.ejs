@@ -10,7 +10,7 @@
       <a class="navbar-brand" href="#"><%= name %></a>
     </div>
     <div class="nav navbar-collapse collapse">
-        <div class="nav navbar-left navbar-text" style="margin-top: 0; margin-bottom: 0">
+        <div id="greeting" class="nav navbar-left navbar-text" style="margin-top: 0; margin-bottom: 0">
             <% if (user) {%>
                Signed in as <%= user.name %> &nbsp; <a class="btn btn-default navbar-btn" href="/logout">Logout</a>
             <% } else { %>

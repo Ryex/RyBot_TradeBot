@@ -1,4 +1,4 @@
-var rek = require("rekuire");
+var rek = require('rekuire');
 var vows = require('vows');
 var assert = require('assert');
 var async = require('async');
@@ -209,7 +209,7 @@ vows.describe('DB').addBatch({
                 });
 
 
-            }, "test");
+            }, "test"); // use the test db
         },
 
         'Configs' : {
@@ -237,7 +237,7 @@ vows.describe('DB').addBatch({
                     });
                     return cfg;
                 },
-                
+
                 'Has an `_id`' : function(config) {
                     assert.instanceOf(config._id, DB.ObjectID);
                 },
@@ -370,7 +370,7 @@ vows.describe('DB').addBatch({
                     var u = new users.User({name:"test2", password:"test123", admin:false});
                     return u;
                 },
-                
+
                 'Has an `_id`' : function(user) {
                     assert.instanceOf(user._id, DB.ObjectID);
                 },
@@ -502,7 +502,7 @@ vows.describe('DB').addBatch({
                     });
                     return acc;
                 },
-                
+
                 'Has an `_id`' : function(account) {
                     assert.instanceOf(account._id, DB.ObjectID);
                 },
@@ -593,7 +593,7 @@ vows.describe('DB').addBatch({
                     });
                     return sig;
                 },
-                
+
                 'Has an `_id`' : function(signal) {
                     assert.instanceOf(signal._id, DB.ObjectID);
                 },
@@ -670,7 +670,7 @@ vows.describe('DB').addBatch({
                     });
                     return par;
                 },
-                
+
                 'Has an `_id`' : function(pair) {
                     assert.instanceOf(pair._id, DB.ObjectID);
                 },
@@ -703,12 +703,11 @@ vows.describe('DB').addBatch({
 
         teardown: function(topic) {
             var tasks = [];
-
-            // drop tables
+            // remove tables
             tasks.push(function(cb) {
                 gdb().collection("configs", function(err, collection) {
                     if (err) return cb(err);
-                    collection.drop(function(err, result) {
+                    collection.remove({}, function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
@@ -717,16 +716,16 @@ vows.describe('DB').addBatch({
             tasks.push(function(cb) {
                 gdb().collection("users", function(err, collection) {
                     if (err) return cb(err);
-                    collection.drop(function(err, result) {
+                    collection.remove({}, function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
                 });
             });
             tasks.push(function(cb) {
-                gdb().collection("accountss", function(err, collection) {
+                gdb().collection("accounts", function(err, collection) {
                     if (err) return cb(err);
-                    collection.drop(function(err, result) {
+                    collection.remove({}, function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
@@ -735,19 +734,14 @@ vows.describe('DB').addBatch({
             tasks.push(function(cb) {
                 gdb().collection("signals", function(err, collection) {
                     if (err) return cb(err);
-                    collection.drop(function(err, result) {
+                    collection.remove({}, function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
                 });
             });
 
-            tasks.push(function(cb) {
-                DB.close();
-                cb(null, true);
-            });
-
-            async.series(tasks, function(err, results) {
+            async.parallel(tasks, function(err, results) {
                 if (err) throw err;
                 return results;
             });

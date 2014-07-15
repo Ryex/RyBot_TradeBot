@@ -35,7 +35,7 @@ cfg.Config = function(cfg_obj) {
             if (err) return cb(err);
             collection.update({_id: self._id}, cfg_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
-              console.log("returning form config save")
+
               return cb(null, result);
             });
         });

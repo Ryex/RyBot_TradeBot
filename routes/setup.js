@@ -51,7 +51,6 @@ module.exports = function(req, res){
                     tasks.push(function(cb){
                         // update the config
                         config.save(function(err, result) {
-                            console.log("entering  save after", err, result)
                             if (err) return cb(new VError(err, "Config failed to save"));
                             if (!result) return cb(new Error("ERROR: Config failed to save"));
                             return cb(null, result);
@@ -63,9 +62,7 @@ module.exports = function(req, res){
                         user.prepare(function(err, result) {
                             if (err) return cb(new VError(err, "User preperation failed"));
                             if (!result) return cb(new Error("ERROR: User preperation failed"));
-                            console.log("user prepare", user)
                             user.save(function(err, result) {
-                                console.log("entering user save after", err, result)
                                 if (err) return cb(new  VError(err, "User failed to save"));
                                 if (!result) return cb(new Error("ERROR: User failed to save"));
                                 return cb(null, result);
@@ -77,9 +74,7 @@ module.exports = function(req, res){
                     tasks.push(startup.ensure_users);
     
                     async.series(tasks, function(err, results) {
-                        console.log("entering async after", err, results)
                         if (err) throw new VError(err, "Could not save first time configuration");
-                        console.log("redirecting")
                         res.redirect('/');
                     });
                     

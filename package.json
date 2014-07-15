@@ -4,7 +4,7 @@
   "description": "an API agnostic trade bot (BTC-e tested)",
   "scripts": {
     "start": "node server.js",
-    "test": "vows tests/* --spec"
+    "test": "vows tests/*_test.js --spec"
   },
   "repository": {
     "type": "git",
@@ -55,6 +55,7 @@
     "rekuire": "^0.1.5"
   },
   "devDependencies": {
-    "vows": "^0.7.0"
+    "vows": "*",
+    "zombie": "*"
   }
 }

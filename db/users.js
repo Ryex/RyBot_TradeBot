@@ -126,7 +126,6 @@ Users.User = User = function (user_obj) {
             if (err) return cb(err);
             collection.update({_id: self._id}, user_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
-              console.log("returning form user save")
               return cb(null, result);
             });
         });

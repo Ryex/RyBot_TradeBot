@@ -1,141 +1,16 @@
-
-/**
- * Module dependencies.
- */
-
-
 // get app envierment setup
 var rek = require('rekuire');
 
 var app_env = rek('env')
 
-// get nodejs included modules
-var http = require('http');
-var https = require('https');
-var path = require('path');
-
-// Logging
-var scribe = rek('scribe');
-
-// configur logging
-
-scribe.configure(function(){
-    scribe.set('app', 'RyBot_Trader');                  // NOTE Best way learn about these settings is
-    scribe.set('logPath', global.appdir + '/scribe');     // them out for yourself.
-    scribe.set('defaultTag', 'DEFAULT_TAG');
-    scribe.set('divider', ':::');
-    scribe.set('identation', 5);                        // Identation before console messages
-
-    scribe.set('maxTagLength', 30);                     // Any tags that have a length greather than
-                                                        // 30 characters will be ignored
-
-    scribe.set('mainUser', process.env.USER);           // Username of the account which is running
-                                                        // the NodeJS server
-});
-
-scribe.addLogger("log", true , true, 'green');            // (name, save to file, print to console,
-scribe.addLogger("warn", true , true, 'orange');
-scribe.addLogger("error", true , true, 'red');
-scribe.addLogger('realtime', true, true, 'underline');    // tag color)
-scribe.addLogger('high', true, true, 'magenta');
-scribe.addLogger('normal', true, true, 'white');
-scribe.addLogger('low', true, true, 'grey');
-
-
-// get express and it's official middleware
-var express = require('express');
-var morgan = require('morgan');
-var cookieParser = require('cookie-parser');
-var expressSession = require('express-session');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var errorhandler = require('errorhandler');
-
-// 3ed party middleware
-var flash = require('connect-flash');
-var passport = require('passport');
-
-// get our routes
-var routes = rek('routes');
-
 // get the function we need to set up
 var startup = rek('startup.js');
 
-// load the configuration
-var config  = rek('config.js');
 
+startup.setupScribe();
 
-// set up the express server
-var app = express();
+var app = startup.buildApp();
 
-// all environments
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
-
-// development only
-if ('development' == app.get('env')) {
-    app.use(scribe.express.logger(function(req, res){         // Express.js access log
-        return true;                                          // Filter out any Express messages
-    }));
-}
-
-// we want cookies
-app.use(cookieParser(config.cookieSecret));
-
-// we want our cookies to store our session
-app.use(expressSession({
-    cookie: { maxAge: config.cookieMaxAge },
-    secret: config.cookieSecret,
-    resave: true,
-    saveUninitialized: true
-}));
-
-// we want to be able to use flash messages
-app.use(flash());
-
-// set up authentication middleware
-app.use(passport.initialize());
-app.use(passport.session());
-
-// parse request bodies
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
-// let us overide HTTP verbs
-app.use(methodOverride());
-
-
-
-// development only
-if ('development' == app.get('env')) {
-    app.use(errorhandler());
-}
-
-// respond to static paths
-app.use(express.static(path.join(__dirname, 'public')));
-
-//add routes
-routes.add_routes(app);
-
-
-startup.prepare( function(err, results){
-    if (err) {
-        global.BAD_ERROR = err;
-        console.error("[Startup]", err.stack);
-    }
-    var auth = rek('auth.js');
-    if (config.runHTTPS) {
-        http.createServer(app).listen(config.serverHTTPSPort, config.serverIp, function(){
-            console.log('[Server] HTTPS Express server listening on ' + config.serverHTTPSIp + ":" + config.serverPort);
-        });
-    }
-    if (!config.HTTPSOnly || !config.runHTTPS) {
-        http.createServer(app).listen(config.serverPort, config.serverIp, function(){
-            console.log('[Server] HTTP Express server listening on ' + config.serverIp + ":" + config.serverPort);
-        });
-    }
-
+startup.run(app, function(err, result) {
+    console.log("[Startup] All services running.")
 });
-
