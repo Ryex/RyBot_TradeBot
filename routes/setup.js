@@ -24,7 +24,7 @@ module.exports = function(req, res){
 
             var config = new Configs.Config({
                 main: true,
-                botName: req.body.app.name
+                botName: req.body.app.botName
             });
 
             var check_user = function() {
@@ -38,7 +38,7 @@ module.exports = function(req, res){
             };
 
             var check_config =function(config) {
-                if (req.body.app.name) return true;
+                if (req.body.app.botName) return true;
                 return false;
             };
 

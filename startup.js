@@ -69,7 +69,7 @@ startup.setupScribe = function() {
     });
 
     scribe.addLogger("log", true , true, 'green');            // (name, save to file, print to console, tag color
-    scribe.addLogger("warn", true , true, 'orange');
+    scribe.addLogger("warn", true , true, 'yellow');
     scribe.addLogger("error", true , true, 'red');
     scribe.addLogger('realtime', true, true, 'underline');
     scribe.addLogger('high', true, true, 'magenta');
@@ -134,7 +134,9 @@ startup.buildApp = function () {
     app.use(express.static(path.join(__dirname, 'public')));
 
     //add routes
-    routes.add_routes(app);
+    routes.addRoutes(app);
+    
+    routes.addErrorRoutes(app)
 
     return app;
 };

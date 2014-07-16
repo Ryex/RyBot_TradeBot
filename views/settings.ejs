@@ -3,8 +3,7 @@
   <head>
     <title>Trade Bot Settings</title>
     <link rel='stylesheet' href='/css/style.css' />
-    
-    <% include bootstrap %>
+
   </head>
   <body>
 
@@ -13,117 +12,67 @@
     <div class="jumbotron">
       <div class="container-fluid">
         <h1>Settings</h1>
-        <p>Use the forms below to Update the Bot settings</p>
+        <p>Use the form below to Update the Bot settings</p>
       </div>
     </div>
 
     <% include flash %>
 
     <div class="container-fluid">
+      <form class="form-horizontal" role="form" method="POST" action="/settings">
       
-      <form class="form-horizontal" role="form" method="POST" action="/settings/user">
-        <div class="row">
-          <div class="form-group">
-            <h4>User Settings</h4>
-            
-            <div class="form-group">  
-              <label for="user" class="col-lg-2 control-label">Old Password</label>
-              <div class="col-lg-10">  
-                <input type="text" class="form-control" name="user[oldpass]" id="oldpass" placeholder="Username" required autofocus />
-              </div>  
-            </div>
+        <div class="form-group">
+          <h4>Bot Settings</h4>
 
-            <div class="form-group">  
-              <label for="pass" class="col-lg-2 control-label">New Password</label> 
-              <div class="col-lg-10"> 
-                <input type="password" class="form-control" name="user[newpass]" id="newpass" placeholder="Password" required /> 
-              </div>
-            </div>
+          <label for="botName" class="control-label">Bot Name</label>
+          <input type="text" class="form-control" name="app[botName]" id="botName" placeholder="Name"  required
+            <% if (config.botName) { %>
+              value="<%=  config.botName %>"
+            <% } %>
+          />
 
-          </div>
-        </div>
+          <% var themes = Config.themes.slice(0); // collect the theme options
+             themes.unshift('default');         // add the default theme to the front
+          %>
 
-        <div class="form-group">  
-          <div class="col-lg-10">  
-            <button type="submit" class="btn btn-primary" name="setup" value="setup">Submit</button>  
-          </div>  
-        </div>
-      </form>
+          <label for="themeName" class="control-label">UI Theme</label>
+          <select class="form-control" id="themeName" name="app[themeName]">
+            <% for (var i = 0; i < themes.length; i++) {%>
+              <%  var selected = (config.themeName === themes[i]) ? "selected" : ""; %>
+              <option <%= selected %> value="<%= themes[i] %>"><%=themes[i]%></option>
+            <% } %>
+          </select>
 
-      <form class="form-horizontal" role="form" method="POST" action="/settings/bot">
-        <div class="row">
-          
-          <div class="col-lg-8">
+          <script type="text/javascript">
+            var themes = [
+              <% for (var i = 0; i < themes.length; i++) { var last = i >= themes.length; %>'<%= themes[i]%>'<%= last ? "" : "," %><% } %>
+            ]
+            document.getElementById("themeName").onchange = function(){
+              var themeTag = document.getElementById("themeTag");
+              var theme = themes[this.selectedIndex];
+              themeTag.href = "css/themes/bootstrap-" + theme + ".min.css";
+            }
+          </script>
 
-            <div class="form-group">
-              <h4>Bot Settings</h4>
-
-              <div class="form-group">  
-                <label for="name" class="col-lg-2 control-label">Bot Name</label>  
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" name="app[name]" id="name" placeholder="Name"  required 
-                    <% if (config.name) { %>
-                      value="<%=  config.name %>"
-                    <% } %>
-                  /> 
-                </div>  
-              </div>
-
-              <div class="form-group">  
-                <label for="key" class="col-lg-2 control-label">App API Key</label>  
-                <div class="col-lg-10">  
-                  <input type="text" class="form-control" name="app[key]" id="key" placeholder="API Key" required
-                    <% if (config.key) { %>
-                      value="<%= config.key%>"
-                    <% }%>
-                  />
-                </div>  
-              </div>  
-
-              <div class="form-group">  
-                <label for="secret" class="col-lg-2 control-label">App Secret</label>  
-                <div class="col-lg-10">
-                  <input type="text" class="form-control" name="app[secret]" id="secret" placeholder="Secret"required
-                    <% if (config.secret) { %> 
-                      value="<%= config.secret %>"
-                    <% } %> 
-                  /> 
-                </div>  
-              </div>
-
-            </div>
-
-            
+          <div class="checkbox">
+            <label>
+              <% var checked = config.autostartAgg ? "checked" : ""; %>
+              <input type="checkbox" id="autostartAgg" name="app[autostartAgg]"  <%= checked %> >
+              Autostart data aggregation on server start
+            </label>
           </div>
 
-
-          <div class="col-lg-3 col-lg-offset-1">
-            <div class="form-group">
-              <h4>Pairs to Track</h4>
-              <% for (var i = 0; i < possiblePairs.length; i++) { %>
-                <div class=" col-lg-12 checkbox">  
-                  <label for="user" class="">
-                    <%= possiblePairs[i] %>
-                    <input type="checkbox" class="" name="pairs[]" id="<%= possiblePairs[i] %>" value="<%= possiblePairs[i] %>" <% if(config.pairs.indexOf(possiblePairs[i]) >= 0) { %>checked<% }%> />
-                  </label> 
-                </div>
-              <% } %>
-            </div>
-          </div>
-        
         </div>
 
-        
-        <div class="form-group">  
-          <div class="col-lg-10">  
-            <button type="submit" class="btn btn-primary" name="setup" value="setup">Submit</button>  
-          </div>  
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary" name="setup" value="setup">Submit</button>
         </div>
-        
+
 
       </form>
     </div>
-      
-    
+
+    <% include bootstrap %>
   </body>
 </html>

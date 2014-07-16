@@ -242,6 +242,14 @@ vows.describe('DB').addBatch({
                     assert.instanceOf(config._id, DB.ObjectID);
                 },
 
+                'Has a `themeName` property' : function(config) {
+                    assert.isString(config.themeName);
+                },
+
+                'Has a `autostartAgg` boolean' : function(config) {
+                    assert.isBoolean(config.autostartAgg);
+                },
+
                 'Has a `botName` property' : function(config) {
                     assert.isString(config.botName);
                 },
@@ -703,11 +711,11 @@ vows.describe('DB').addBatch({
 
         teardown: function(topic) {
             var tasks = [];
-            // remove tables
+            // drop tables
             tasks.push(function(cb) {
                 gdb().collection("configs", function(err, collection) {
                     if (err) return cb(err);
-                    collection.remove({}, function(err, result) {
+                    collection.drop(function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
@@ -716,7 +724,7 @@ vows.describe('DB').addBatch({
             tasks.push(function(cb) {
                 gdb().collection("users", function(err, collection) {
                     if (err) return cb(err);
-                    collection.remove({}, function(err, result) {
+                    collection.drop(function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
@@ -725,7 +733,7 @@ vows.describe('DB').addBatch({
             tasks.push(function(cb) {
                 gdb().collection("accounts", function(err, collection) {
                     if (err) return cb(err);
-                    collection.remove({}, function(err, result) {
+                    collection.drop(function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
@@ -734,7 +742,7 @@ vows.describe('DB').addBatch({
             tasks.push(function(cb) {
                 gdb().collection("signals", function(err, collection) {
                     if (err) return cb(err);
-                    collection.remove({}, function(err, result) {
+                    collection.drop(function(err, result) {
                         if (err) return cb(err);
                         return cb(null, result);
                     });
@@ -745,13 +753,7 @@ vows.describe('DB').addBatch({
                 if (err) throw err;
                 return results;
             });
-
-
         }
     }
+}).export(module);
 
-
-
-
-
-}).export(module)

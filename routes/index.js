@@ -9,7 +9,7 @@ var passport = require('passport');
 
 var DB = rek('db');
 var gdb = DB.getDb;
-var config  = rek('config.js');
+var Config  = rek('config.js');
 
 var scribe = rek('scribe');
 
@@ -18,23 +18,25 @@ module.exports = exports = routes = {};
 
 
 routes.genPageEnv = function(req, res) {
-    var title = global.CONFIG.name || "Rybot Trade Bot";
+    var title = global.CONFIG.botName || "Rybot Trade Bot";
     return {
         title: title,
         config: global.CONFIG,
+        Config: Config,
         name: title,
         error_message: req.flash('error'),
         info_message: req.flash('info'),
         success_message: req.flash('success'),
         warning_message: req.flash('warning'),
-        error: global.BAD_ERROR,
         user: req.user
     }
 }
 
 function badGlobalError(req, res, next) {
     if (!global.BAD_ERROR) { return next();}
-    res.render('error', routes.genPageEnv(req, res));
+    var env = routes.genPageEnv(req, res)
+    env.error = global.BAD_ERROR;
+    res.render('error', env);
 }
 
 function ensureSetup(req, res, next) {
@@ -53,7 +55,7 @@ function ensureAdmin(req, res, next) {
     res.redirect('/')
 }
 
-exports.add_routes = function(app) {
+exports.addRoutes = function(app) {
     
     routes.buildRoutes();
     
@@ -80,7 +82,44 @@ exports.add_routes = function(app) {
 
     app.get('/candle/:name/:mins/:pair/:date_start/:date_end', ensureSetup, ensureAuthenticated,  routes.candles);
 
-    app.get ('/settings', ensureSetup, ensureAuthenticated, routes.settings.render)
+    app.get('/settings', ensureSetup, ensureAuthenticated, ensureAdmin, routes.settings)
+    app.post('/settings', ensureSetup, ensureAuthenticated, ensureAdmin, routes.settings)
+}
+
+routes.addErrorRoutes = function (app) {
+    
+    
+    app.use(function(req, res, next){
+        var env = routes.genPageEnv(req, res);
+        env.url = req.url;
+        res.status(404);
+        
+        // respond with html page
+        if (req.accepts('html')) {
+        res.render('404', env);
+        return;
+        }
+        
+        // respond with json
+        if (req.accepts('json')) {
+        res.send({ error: 'Not found' });
+        return;
+        }
+        
+        // default to plain-text. send()
+        res.type('txt').send('Not found');
+    });
+    
+    app.use(function(err, req, res, next){
+      // we may use properties of the error object
+      // here and next(err) appropriately, or if
+      // we possibly recovered from the error, simply next().
+      var env = routes.genPageEnv(req, res);
+      env.error = err;
+      res.status(err.status || 500);
+      res.render('500', env);
+    });
+
 }
 
 routes.buildRoutes = function () {

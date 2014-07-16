@@ -4,7 +4,7 @@
     <title>Setup Your Trade Bot</title>
     <link rel='stylesheet' href='/css/style.css' />
     
-    <% include bootstrap %>
+    
   </head>
   <body>
 
@@ -57,11 +57,11 @@
               <h4>Bot Settings</h4>
 
               <div class="form-group">  
-                <label for="name" class="col-lg-2 col-md-2 col-sm-3 control-label">Bot Name</label>  
-                <div class="col-lg-6 col-md-6 col-sm-">
-                  <input type="text" class="form-control" name="app[name]" id="name" placeholder="Name"  required 
-                    <% if (config.name) { %>
-                      value="<%=  config.name %>"
+                <label for="botName" class="col-lg-2 col-md-2 col-sm-3 control-label">Bot Name</label>  
+                <div class="col-lg-6 col-md-6 col-sm-7">
+                  <input type="text" class="form-control" name="app[botName]" id="botName" placeholder="Name"  required 
+                    <% if (config.botName) { %>
+                      value="<%=  config.botName %>"
                     <% } %>
                   /> 
                 </div>  
@@ -84,6 +84,6 @@
       </form>
     </div>
       
-    
+    <% include bootstrap %>
   </body>
 </html>

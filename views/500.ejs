@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <link rel='stylesheet' href='/css/style.css' />
+        <link rel='stylesheet' href='/css/dashboard.css' />
+        
+    </head>
+    <body>
+        <% include nav %>
+        
+        <% include flash %>
+        
+        <div class="container">
+        
+            <div class="page-header">
+              <h2>Error: '<%= error.message%>' </h1>
+            </div>
+            
+            <div class="container-fluid alert alert-danger">
+            <% if (Config.verboseErrors) {%>
+                <pre><code><%= error.stack %></code></pre>
+            <% } else { %>
+                <p> An error occured. </p>
+            <% } %>
+            </div>
+        
+        </div>
+        
+        <% include bootstrap %>
+    </body>
+</html>
