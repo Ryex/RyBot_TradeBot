@@ -170,7 +170,7 @@ vows.describe('Server').addBatch({
                             fill("app[botName]", "TestBotAfter").
                             select("app[themeName]", "slate").
                             check("app[autostartAgg]").
-                            pressButton("Submit", this.callback)
+                            pressButton("Submit", this.callback);
                     },
                     
                     'the global settings should change' : function () {

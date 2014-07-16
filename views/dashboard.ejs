@@ -3,7 +3,7 @@
     <head>
         <title><%= title %></title>
         <link rel='stylesheet' href='/css/style.css' />
-        <link rel='stylesheet' href='/css/dashboard.css' />
+        
         
     </head>
     <body>
@@ -11,17 +11,68 @@
         
         <% include flash %>
         
-        <div class="container">
+        <div class="container-fluid">
         
-            <form class="form-signin" role="form" method="POST" action="/login">
-                <h2 class="form-signin-heading">Please sign in</h2>
-                <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
-                <input type="password" class="form-control" placeholder="Password" name="password" required>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
-            </form>
-        
+            <!--Sidebar -->
+            <div class="row">
+                <div class="col-sm-3 col-md-2 sidebar">
+                    <ul class="nav nav-sidebar">
+                        <li class="active"><a href="#">Accounts</a></li>
+                        <li><a href="#">Pairs</a></li>
+                        <li><a href="#">Signals</a></li>
+                        <li><a href="#">Users</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!--Main Content-->
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h1 class="page-header">Dashboard</h1>
+                
+                <!--Accounts Panel-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Accounts</h3>
+                        
+                    </div>
+                        <div class="panel-body">
+                        ::Account Info::
+                        <a class="btn btn-primary pull-right" href="#">+ New Account</a>
+                        </div>
+                    <div class="panel-footer">Last update: ::date:: </date></div>
+                </div>
+                
+                <!--Pairs Panel-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Pairs</h3>
+                        
+                    </div>
+                        <div class="panel-body">
+                        ::Pair CandelStick Graph::
+                        <a class="btn btn-primary pull-right" href="#">+ New Pair</a>
+                        </div>
+                    <div class="panel-footer">Last update: ::date:: </date></div>
+                </div>
+                
+                <!--Signal Panel-->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Signals</h3>
+                        
+                    </div>
+                        <div class="panel-body">
+                        ::Signal Info::
+                        <a class="btn btn-primary pull-right" href="#">+ New Signal</a>
+                        </div>
+                    <div class="panel-footer">Last update: ::date:: </date></div>
+                </div>
+                
+                
+            </div>
         </div>
         
         <% include bootstrap %>
+        <link rel='stylesheet' href='/css/dashboard.css' />
     </body>
 </html>

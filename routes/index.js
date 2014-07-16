@@ -61,7 +61,7 @@ exports.addRoutes = function(app) {
     
     app.use(badGlobalError);
 
-    app.get('/', ensureSetup, ensureAuthenticated, routes.index);
+    app.get('/', ensureSetup, ensureAuthenticated, routes.dashboard);
     
     app.get('/log', ensureSetup, ensureAuthenticated, ensureAdmin, scribe.express.controlPanel()); 
 
@@ -129,8 +129,9 @@ routes.buildRoutes = function () {
         res.render('login', routes.genPageEnv(req, res))
     }
     
-    routes.setup = require('./setup.js');
-    routes.settings = require('./settings.js');
+    routes.setup = require('./setup');
+    routes.settings = require('./settings');
+    routes.dashboard = require('./dashboard')
     
     routes.index = function(req, res){
         res.render('index', routes.genPageEnv(req, res))
