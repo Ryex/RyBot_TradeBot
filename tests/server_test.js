@@ -84,7 +84,11 @@ vows.describe('Server').addBatch({
         
         'and we visit the site' : {
             topic: function() {
-                this.browser.visit(siteURL, this.callback);
+                var self = this;
+                this.browser.visit(siteURL, function(err, stuff){
+                    self.callback(err, stuff)
+                    
+                });
             },
             
             'we should get a setup page' : function () {
