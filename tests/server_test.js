@@ -66,6 +66,7 @@ function teardownDB(topic) {
 
     async.parallel(tasks, function(err, results) {
         if (err) throw err;
+        DB.close()
         return results;
     });
 
@@ -78,6 +79,7 @@ vows.describe('Server').addBatch({
             
             this.browser = new Browser();
             
+            startup.setupScribe();
             var app = startup.buildApp();
             startup.run(app, this.callback, "test");
         }, 
@@ -195,6 +197,21 @@ vows.describe('Server').addBatch({
         teardown: function () {
             this.browser.close();
         }
+    }
+}).addBatch({
+    'If  we visit a page that does not exist' : {
+        topic: function() {
+            
+            this.browser = new Browser();
+            this.browser.visit(siteURL + "notHere", this.callback);
+        },
+        
+        'we should get a Error page' :  function (err, result) {
+            assert.isObject(err);
+            assert.isFalse(this.browser.success);
+            assert.equal(this.browser.statusCode, 404);
+        }
+        
     }
 }).addBatch({
     teardown: function() {

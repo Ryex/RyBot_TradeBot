@@ -132,10 +132,6 @@ routes.buildRoutes = function () {
     routes.setup = require('./setup');
     routes.settings = require('./settings');
     routes.dashboard = require('./dashboard')
-    
-    routes.index = function(req, res){
-        res.render('index', routes.genPageEnv(req, res))
-    };
-    
+
     routes.candles = require('./candles.js')
 }
