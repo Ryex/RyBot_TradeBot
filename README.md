@@ -1,6 +1,6 @@
 RyBot: *The* Trade bot
 ===============
-[![Build Status](https://travis-ci.org/Ryex/RyBot_TradeBot.svg)](https://travis-ci.org/Ryex/RyBot_TradeBot) [![Coverage Status](https://img.shields.io/coveralls/Ryex/RyBot_TradeBot.svg)](https://coveralls.io/r/Ryex/RyBot_TradeBot) [![Dpendencies Status](https://david-dm.org/Ryex/RyBot_TradeBot.png)](https://david-dm.org/Ryex/RyBot_TradeBot)
+[![Build Status](https://travis-ci.org/Ryex/RyBot_TradeBot.svg)](https://travis-ci.org/Ryex/RyBot_TradeBot) [![Coverage Status](https://coveralls.io/repos/Ryex/RyBot_TradeBot/badge.png?branch=master)](https://coveralls.io/r/Ryex/RyBot_TradeBot) [![Dpendencies Status](https://david-dm.org/Ryex/RyBot_TradeBot.png)](https://david-dm.org/Ryex/RyBot_TradeBot)
 
 ---
 

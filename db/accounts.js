@@ -53,7 +53,7 @@ accounts.Account = function(account_obj) {
         }
         gdb().collection("accounts", function(err, collection) {
             if (err) return cb(err);
-            collection.update({_id: self._}, acc_obj, {upsert:true}, function(err, result) {
+            collection.update({_id: self._id}, acc_obj, {upsert:true}, function(err, result) {
               if (err) return cb(err);
               return cb(null, result);
             });
