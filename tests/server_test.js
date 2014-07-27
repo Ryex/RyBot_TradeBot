@@ -24,7 +24,7 @@ var siteURL = "http://localhost:" + Config.serverPort + "/";
 GLOBAL.TESTING = true;
 
 
-function teardown(topic) {
+function teardownDB(topic) {
     var tasks = [];
     // drop tables
     tasks.push(function(cb) {
@@ -142,7 +142,8 @@ vows.describe('Server').addBatch({
             this.browser.visit(siteURL, this.callback);
         },
         
-        'we should be redirected to the login page' :  function () {
+        'we should be redirected to the login page' :  function (err, result) {
+            assert.isNull(err);
             assert.isTrue(this.browser.success);
             assert.equal(this.browser.location.pathname, "/login");
         },
@@ -156,7 +157,8 @@ vows.describe('Server').addBatch({
                     pressButton("Sign In", this.callback);
             },
             
-            'we should get our homepage' : function () {
+            'we should get our homepage' : function (err, result) {
+                assert.isNull(err);
                 assert.isTrue(this.browser.success);
                 assert.equal(this.browser.location.pathname, "/");
                 assert.ok(this.browser.query("#greeting"));
@@ -177,7 +179,8 @@ vows.describe('Server').addBatch({
                             pressButton("Submit", this.callback);
                     },
                     
-                    'the global settings should change' : function () {
+                    'the global settings should change' : function (err, result) {
+                        assert.isNull(err);
                         assert.isTrue(this.browser.success);
                         assert.equal('slate', global.CONFIG.themeName);
                         assert.equal('TestBotAfter', global.CONFIG.botName);
@@ -192,5 +195,9 @@ vows.describe('Server').addBatch({
         teardown: function () {
             this.browser.close();
         }
+    }
+}).addBatch({
+    teardown: function() {
+        startup.stop(teardownDB);
     }
 }).export(module)

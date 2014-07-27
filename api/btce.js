@@ -22,7 +22,7 @@ var pairs = [
 
 var nextNonceFunc = function() {
     var d = new Date();
-    var seconds = d.getTime() / 1000;
+    var seconds = Math.floor(d.getTime() / 1000);
     var nonce = seconds;
     return function() {
         return nonce++;
@@ -69,28 +69,6 @@ var privateAPI = function(key, secret) {
     var self = this;
 
     var api = new BTCE(key, secret, nextNonceFunc);
-
-     // fetches the per transation fee
-    self.fee = function(pair, callback) {
-        api.fee(pair, function(err, result){
-            callback(err, result['trade'])
-        });
-    };
-
-    // fetches a ticker summery
-    self.ticker = function(pair, callback) {
-        api.ticker(pair, callback);
-    };
-
-    // fetches the last trades
-    self.trades = function(pair, callback) {
-        api.trades(pair, callback);
-    };
-
-    // gets trade depth information
-    self.depth = function(pair, callback) {
-        api.depth(pair, callback);
-    };
 
     //information about the user's current balance
     self.getInfo = function (callback) {

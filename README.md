@@ -1,8 +1,7 @@
 RyBot: *The* Trade bot
 ===============
-[![Build Status](https://travis-ci.org/Ryex/RyBot_TradeBot.svg)](https://travis-ci.org/Ryex/RyBot_TradeBot)
-[![Coverage Status](https://img.shields.io/coveralls/Ryex/RyBot_TradeBot.svg)](https://coveralls.io/r/Ryex/RyBot_TradeBot)
-[![Dpendencies Status](https://david-dm.org/Ryex/RyBot_TradeBot.png)](https://david-dm.org/Ryex/RyBot_TradeBot)
+[![Build Status](https://travis-ci.org/Ryex/RyBot_TradeBot.svg)](https://travis-ci.org/Ryex/RyBot_TradeBot) [![Coverage Status](https://img.shields.io/coveralls/Ryex/RyBot_TradeBot.svg)](https://coveralls.io/r/Ryex/RyBot_TradeBot) [![Dpendencies Status](https://david-dm.org/Ryex/RyBot_TradeBot.png)](https://david-dm.org/Ryex/RyBot_TradeBot)
+
 ---
 
 RyBot is an API agnostic Tradebot for Crypto. First developed for use with BTC-e RyBot lets

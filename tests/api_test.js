@@ -3,6 +3,10 @@ var assert = require('assert');
 
 var API = require('../api');
 
+//dont worry, these belong to a dummy account on btce
+var key = "K61CRFHC-PHU2XHI7-OFXA24S1-Z7GLX6PB-SWK9WTOH";
+var secret = "1105ee1643a66bce5cd76664fdfee1b1f08251e9e0c9853634173f61567d68a8";
+var privateAPI = new API.btce.private(key, secret);
 
 vows.describe('API').addBatch({
     'BTC-e': {
@@ -42,11 +46,12 @@ vows.describe('API').addBatch({
                         },
 
                         'a number': function(err, result) {
+                            assert.isNull(err);
                             assert.isNumber(result);
                         },
 
                     }
-                }, 
+                },
 
                 'has a function `ticker`': {
                     topic: function(api) {
@@ -59,6 +64,7 @@ vows.describe('API').addBatch({
                         },
 
                         'a ticker object': function(err, result) {
+                            assert.isNull(err);
                             assert.isObject(result);
                             assert.include(result, 'high');
                             assert.include(result, 'low');
@@ -86,6 +92,7 @@ vows.describe('API').addBatch({
                         },
 
                         'a list of trades': function(err, result){
+                            assert.isNull(err);
                             assert.isArray(result);
                             var first = result[0];
                             assert.include(first, 'date');
@@ -110,29 +117,28 @@ vows.describe('API').addBatch({
                             depth('btc_usd', this.callback);
                         },
 
-                        'an object that': {
-                            topic: function(result) {
-                                return result;
-                            },
+                        'an object that contains a list of asks': function(err, result) {
+                            assert.isNull(err);
+                            assert.include(result, 'asks');
+                            var first_ask = result.asks[0];
+                            assert.lengthOf(first_ask, 2);
+                        },
 
-                            'contains a list of asks': function(result) {
-                                assert.include(result, 'asks');
-                                var first_ask = result.asks[0];
-                                assert.lengthOf(first_ask, 2);
-                            },
-
-                            'contains a list of bids': function(result) {
-                                assert.include(result, 'bids');
-                                var first_bid = result.bids[0];
-                                assert.lengthOf(first_bid, 2);
-                            }
-
+                        'an object that contains a list of bids': function(err, result) {
+                            assert.isNull(err);
+                            assert.include(result, 'bids');
+                            var first_bid = result.bids[0];
+                            assert.lengthOf(first_bid, 2);
                         }
                     }
                 }
             }
-        },
-
+        }
+    }
+}).addBatch({
+    'BTC-e': {
+        topic: API.btce,
+        
         'Has Private API': {
             topic: function(btce) {
                 return btce.private;
@@ -140,60 +146,185 @@ vows.describe('API').addBatch({
 
             'That can be constructed': function(api) {
                 assert.isFunction(api);
-            },
-
-            'That ...': {
-                topic: function(api) {
-                    return new api();
-                },
-                'responds to `fee`': function(api) {
-                    assert.isFunction(api.fee);
-                },
-
-                'responds to `ticker`': function(api) {
-                    assert.isFunction(api.ticker);
-                },
-
-                'responds to `trades`': function(api) {
-                    assert.isFunction(api.trades);
-                },
-
-                'responds to `depth`': function(api) {
-                    assert.isFunction(api.depth);
-                },
-
-                'responds to `getInfo`': function(api) {
-                    assert.isFunction(api.getInfo);
-                },
-
-                'responds to `transHistory`': function(api) {
-                    assert.isFunction(api.transHistory);
-                },
-
-                'responds to `tradeHistory`': function(api) {
-                    assert.isFunction(api.tradeHistory);
-                },
-
-                'responds to `activeOrders`': function(api) {
-                    assert.isFunction(api.activeOrders);
-                },
-
-                'responds to `trade`': function(api) {
-                    assert.isFunction(api.trade);
-                },
-
-                'responds to `cancelOrder`': function(api) {
-                    assert.isFunction(api.cancelOrder);
-                }
             }
-
-            
         },
-
+        
         'Has a list of possible pairs' : function(btce) {
             assert.isArray(btce.pairs);
             assert.ok(btce.pairs.length > 0);
             assert.isString(btce.pairs[0]);
+        }
+    }
+
+}).addBatch({
+    'BTC-e Has Private API That' : {
+        
+        topic: function(api) {
+            return privateAPI
+        },
+
+        'has a function `getInfo`': {
+            topic: function(api) {
+                assert.isFunction(api.getInfo);
+                return api.getInfo;
+            },
+
+            'that when called asynchronously returns': {
+                topic: function(getInfo) {
+                    getInfo(this.callback);
+                },
+
+                'an object that has a return object with a list of `funds`,  key `rights`, `transaction_count`, `open_orders`, and `server_time` ' : function(err, result) {
+                    assert.isNull(err);
+                    assert.isObject(result);
+                    assert.isObject(result.funds);
+                    assert.isObject(result.rights);
+                    assert.isNumber(result.transaction_count);
+                    assert.isNumber(result.open_orders);
+                    assert.isNumber(result.server_time);
+                }
+            }
+        }
+    }
+}).addBatch({
+    'BTC-e Has Private API That' : {
+        
+        topic: function(api) {
+            return privateAPI
+        },
+
+        'has a function `transHistory`': {
+            topic: function(api) {
+                assert.isFunction(api.transHistory);
+                return api.transHistory;
+            },
+
+            'that when called asynchronously returns': {
+                topic: function(transHistory) {
+                    var perams = {
+                        //empty none required
+                    };
+                    transHistory(perams, this.callback);
+                },
+
+                'an object that has a return object that carries a list of transactions (errors, test key has no transactions)': function(err, result) {
+                    assert.isObject(err);
+                    assert.isUndefined(result);
+                }
+
+            
+            }
+        }
+    }
+}).addBatch({
+    'BTC-e Has Private API That' : {
+        
+        topic: function(api) {
+            return privateAPI
+        },
+
+        'has a function `tradeHistory`': {
+            topic: function(api) {
+                assert.isFunction(api.tradeHistory);
+                return api.tradeHistory;
+            },
+
+            'that when called asynchronously returns': {
+                topic: function(tradeHistory) {
+                    var perams = {
+                        //empty none required
+                    };
+                    tradeHistory(perams, this.callback);
+                },
+
+                'an object that has a return object that carries a list of trades (errors, test key has no trades)': function(err, result) {
+                    assert.isObject(err);
+                    assert.isUndefined(result);
+                }
+            }
+        }
+    }
+}).addBatch({
+    'BTC-e Has Private API That' : {
+        
+        topic: function(api) {
+            return privateAPI
+        },
+
+        'has a function `activeOrders`': {
+            topic: function(api) {
+                assert.isFunction(api.activeOrders);
+                return api.activeOrders;
+            },
+
+            'that when called asynchronously returns': {
+                topic: function(activeOrders) {
+                    var pair = 'btc_usd'
+                    activeOrders(pair, this.callback);
+                },
+
+                'an object that has a return object that carries a list of trades (errors, test key has no orders)': function(err, result) {
+                    assert.isObject(err);
+                    assert.isUndefined(result);
+                }
+
+            }
+        }
+    }
+}).addBatch({
+    'BTC-e Has Private API That' : {
+        
+        topic: function(api) {
+            return privateAPI
+        },
+
+        'has a function `trade`': {
+            topic: function(api) {
+                assert.isFunction(api.trade);
+                return api.trade;
+            },
+
+            'that when called asynchronously returns': {
+                topic: function(trade) {
+                    var pair = 'btc_usd',
+                        type = 'buy',
+                        rate = 0.0,
+                        amount = 1.0;
+                        
+                    trade(pair, type, rate, amount, this.callback);
+                },
+
+                'an object that carries an error (test key does not have trade permissions)': function(err, result) {
+                    assert.isObject(err);
+                    assert.isUndefined(result);
+                }
+            }
+        }
+    }
+}).addBatch({
+    'BTC-e Has Private API That' : {
+        
+        topic: function(api) {
+            return privateAPI
+        },
+
+        'has a function `cancelOrder`': {
+            topic: function(api) {
+                assert.isFunction(api.cancelOrder);
+                return api.cancelOrder;
+            },
+
+            'that when called asynchronously returns': {
+                topic: function(cancelOrder) {
+                    var order_id = 0
+                    cancelOrder(order_id, this.callback);
+                },
+
+                'an object that carries an error (test key does not have trade permissions)': function(err, result) {
+                    assert.isObject(err);
+                    assert.isUndefined(result);
+                }
+            }
         }
     }
 
