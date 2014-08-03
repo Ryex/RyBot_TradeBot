@@ -1,3 +1,4 @@
+
 var BTCE = require('btc-e');
 
 
@@ -20,14 +21,7 @@ var pairs = [
     'ftc_btc'
 ];
 
-var nextNonceFunc = function() {
-    var d = new Date();
-    var seconds = Math.floor(d.getTime() / 1000);
-    var nonce = seconds;
-    return function() {
-        return nonce++;
-    }
-}();
+
 
 var publicAPI = function () {
 
@@ -67,7 +61,16 @@ var publicAPI = function () {
 
 var privateAPI = function(key, secret) {
     var self = this;
-
+    
+    var nextNonceFunc = function() {
+        var d = new Date();
+        var seconds = Math.floor(d.getTime() / 1000);
+        var nonce = seconds;
+        return function() {
+            return nonce++;
+        }
+    }();
+    
     var api = new BTCE(key, secret, nextNonceFunc);
 
     //information about the user's current balance
