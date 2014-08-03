@@ -3,10 +3,12 @@ var assert = require('assert');
 
 var API = require('../api');
 
+global.DEBUG = true;
+
 //dont worry, these belong to a dummy account on btce
 var key = "K61CRFHC-PHU2XHI7-OFXA24S1-Z7GLX6PB-SWK9WTOH";
 var secret = "1105ee1643a66bce5cd76664fdfee1b1f08251e9e0c9853634173f61567d68a8";
-var privateAPI = new API.btce.private(key, secret);
+var privateAPI = new API.sync(new API.btce.private(key, secret));
 
 vows.describe('API').addBatch({
     'BTC-e': {
@@ -138,8 +140,8 @@ vows.describe('API').addBatch({
 }).addBatch({
     'BTC-e': {
         topic: API.btce,
-        
-        'Has Private API': {
+
+        'Has a Private API': {
             topic: function(btce) {
                 return btce.private;
             },
@@ -148,7 +150,7 @@ vows.describe('API').addBatch({
                 assert.isFunction(api);
             }
         },
-        
+
         'Has a list of possible pairs' : function(btce) {
             assert.isArray(btce.pairs);
             assert.ok(btce.pairs.length > 0);
@@ -158,7 +160,7 @@ vows.describe('API').addBatch({
 
 }).addBatch({
     'BTC-e Has Private API That' : {
-        
+
         topic: function(api) {
             return privateAPI
         },
@@ -184,13 +186,6 @@ vows.describe('API').addBatch({
                     assert.isNumber(result.server_time);
                 }
             }
-        }
-    }
-}).addBatch({
-    'BTC-e Has Private API That' : {
-        
-        topic: function(api) {
-            return privateAPI
         },
 
         'has a function `transHistory`': {
@@ -212,15 +207,8 @@ vows.describe('API').addBatch({
                     assert.isUndefined(result);
                 }
 
-            
+
             }
-        }
-    }
-}).addBatch({
-    'BTC-e Has Private API That' : {
-        
-        topic: function(api) {
-            return privateAPI
         },
 
         'has a function `tradeHistory`': {
@@ -242,13 +230,6 @@ vows.describe('API').addBatch({
                     assert.isUndefined(result);
                 }
             }
-        }
-    }
-}).addBatch({
-    'BTC-e Has Private API That' : {
-        
-        topic: function(api) {
-            return privateAPI
         },
 
         'has a function `activeOrders`': {
@@ -269,13 +250,6 @@ vows.describe('API').addBatch({
                 }
 
             }
-        }
-    }
-}).addBatch({
-    'BTC-e Has Private API That' : {
-        
-        topic: function(api) {
-            return privateAPI
         },
 
         'has a function `trade`': {
@@ -290,7 +264,7 @@ vows.describe('API').addBatch({
                         type = 'buy',
                         rate = 0.0,
                         amount = 1.0;
-                        
+
                     trade(pair, type, rate, amount, this.callback);
                 },
 
@@ -299,13 +273,6 @@ vows.describe('API').addBatch({
                     assert.isUndefined(result);
                 }
             }
-        }
-    }
-}).addBatch({
-    'BTC-e Has Private API That' : {
-        
-        topic: function(api) {
-            return privateAPI
         },
 
         'has a function `cancelOrder`': {

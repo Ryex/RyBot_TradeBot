@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/Ryex/RyBot_BTC-E.git"
+    "url": "git://github.com/Ryex/RyBot_TradeBot.git"
   },
   "keywords": [
     "BTC-E",
@@ -19,9 +19,9 @@
   "author": "Ryex",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Ryex/RyBot_BTC-E/issues"
+    "url": "https://github.com/Ryex/RyBot_TradeBot/issues"
   },
-  "homepage": "https://github.com/Ryex/RyBot_BTC-E",
+  "homepage": "https://github.com/Ryex/RyBot_TradeBot",
   "dependencies": {
     "async": "^0.9.0",
     "bcrypt": "^0.7.8",
