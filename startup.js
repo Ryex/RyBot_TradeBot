@@ -77,7 +77,6 @@ startup.setupScribe = function() {
     scribe.addLogger('low', true, true, 'grey');
 }
 
-
 startup.buildApp = function () {
 
     // set up the express server
@@ -229,48 +228,6 @@ startup.ensure_users = function(cb) {
         return cb(null,  global.SETUP);
     });
 };
-
-/*
-function setup_pairs(pairs, callback) {
-    // a list of tasks that might need to be compleated async to get teh server ready
-    var tasks = [];
-
-    // Create capped collections with a maximum of 20000 documents for traid pairs we want to trak
-    // and capped collections for 10 and 30 minuet charts
-    for (var i = 0; i < pairs.length; i++) {
-        var trades_name = "trades_" + pairs[i];
-        var min10_name = "10minute_" + pairs[i];
-        var min30_name = "30minute_" + pairs[i];
-
-
-
-
-        //add to task q
-        tasks.push(function(cb){Db.createCollection(trades_name, cb);});
-        tasks.push(function(cb){Db.forceTTLindex(trades_name, cb);});
-        tasks.push(function(cb){Db.createCollection(min10_name, cb);});
-        tasks.push(function(cb){Db.forceTTLindex(min10_name, cb);});
-        //tasks.push(forcep2(min10_name))
-        tasks.push(function(cb){Db.createCollection(min30_name, cb);});
-        tasks.push(function(cb){Db.forceTTLindex(min30_name, cb);});
-        //tasks.push(forcep2(min30_name))
-
-
-
-    }
-
-    // run all our tasks async but in series
-    async.series(tasks, function(err, results) {
-        if (err) {
-            return callback(err);
-        }
-
-        callback(null, results);
-    });
-
-}*/
-
-
 
 startup.prepare = function(callback, dbname) {
     // Establish connection to db

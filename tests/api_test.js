@@ -1,18 +1,20 @@
+var rek = require('rekuire');
+
 var vows = require('vows');
 var assert = require('assert');
 
-var API = require('../api');
+var API = rek('api');
 
 global.DEBUG = true;
 
 //dont worry, these belong to a dummy account on btce
 var key = "K61CRFHC-PHU2XHI7-OFXA24S1-Z7GLX6PB-SWK9WTOH";
 var secret = "1105ee1643a66bce5cd76664fdfee1b1f08251e9e0c9853634173f61567d68a8";
-var privateAPI = new API.sync(new API.btce.private(key, secret));
+var privateAPI = API.fetchSyncApi('btce_private', 'btce', true, [key, secret]);
 
 vows.describe('API').addBatch({
     'BTC-e': {
-        topic: API,
+        topic: API.apis,
 
         'Shold Exist': function(topic) {
             assert.isNotNull(topic);
@@ -21,7 +23,7 @@ vows.describe('API').addBatch({
     }
 }).addBatch({
     'BTC-e': {
-        topic: API.btce,
+        topic: API.apis.btce,
 
         'Has a Public API': {
             topic: function(btce) {
@@ -139,7 +141,7 @@ vows.describe('API').addBatch({
     }
 }).addBatch({
     'BTC-e': {
-        topic: API.btce,
+        topic: API.apis.btce,
 
         'Has a Private API': {
             topic: function(btce) {

@@ -1,5 +1,8 @@
 var rek = require('rekuire');
 
+var crypto = require('crypto');
+var async = require('async');
+
 var DB = rek('db');
 var gdb = DB.getDb;
 var config  = rek('config.js')
@@ -50,6 +53,21 @@ Users.findByUsername = function(username, cb) {
     });
 };
 
+Users.findByAPIKey = function(apikey, cb) {
+    gdb().collection("users", function(err, collection){
+        if (err) return cb(err);
+        collection.findOne({apikey: apikey}, function(err, data) {
+            if (err) return cb(err);
+            if (data) { 
+                var u = new User(data);
+                return cb(null, u);
+            } else {
+                return cb(new Error('API Key Not Found'));
+            }
+        });
+    });
+};
+
 Users.hashPassword = function(password, cb) {
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
         if(err) return cb(err);
@@ -78,6 +96,12 @@ Users.comparePassword = function(candidatePassword, hash_pass, cb) {
     });
 };
 
+Users.genAPIKey = function(cb) {
+    crypto.randomBytes(48, function(ex, buf) {
+        var token = buf.toString('hex');
+        return cb(null, token);
+    });
+};
 
 Users.User = User = function (user_obj) {
 
@@ -98,6 +122,10 @@ Users.User = User = function (user_obj) {
     if (typeof(user_obj.hash_password) != 'undefined' && typeof(user_obj.hash_password) != 'string' ) {
         throw new Error("Invalid type for `user_obj.hash_password`: expected `string`, got `" + typeof(user_obj.hash_password) + "`");
     }
+    
+    if (typeof(user_obj.apikey) != 'undefined' && typeof(user_obj.apikey) != 'string' ) {
+        throw new Error("Invalid type for `user_obj.apikey`: expected `string`, got `" + typeof(user_obj.apikey) + "`");
+    }
 
     if (typeof(user_obj.admin) != 'boolean') {
         throw new Error("Invalid type for `user_obj.admin`: expected `boolean`, got `" + typeof(name) + "`");
@@ -108,6 +136,7 @@ Users.User = User = function (user_obj) {
     self.name = user_obj.name;
     self.username = user_obj.name.toLowerCase();
     self.hash_password = user_obj.hash_password || null;
+    self.apikey = user_obj.apikey || undefined;
     self._id = user_obj._id || new DB.ObjectID();
 
     var user_password = user_obj.password || null;
@@ -120,8 +149,9 @@ Users.User = User = function (user_obj) {
             name: self.name,
             username: self.username,
             hash_password: self.hash_password,
+            apikey: self.apikey,
             admin: self.admin
-        }
+        };
         gdb().collection("users", function(err, collection) {
             if (err) return cb(err);
             collection.update({_id: self._id}, user_obj, {upsert:true}, function(err, result) {
@@ -138,9 +168,9 @@ Users.User = User = function (user_obj) {
                if (err) return cb(err);
                if (numRemoved > 0) return cb(null, true);
                return cb(new Error("ERROR: User, `" + self.name + "` was not removed"));
-           })
+           });
         });
-    }
+    };
 
     self.setPassword = function (password, cb) {
         Users.hashPassword(password, function(err, hash) {
@@ -148,26 +178,36 @@ Users.User = User = function (user_obj) {
 
             self.hash_password = hash;
             return cb(null, true);
-        })
-    }
+        });
+    };
 
     self.testPassword = function(pass, cb) {
         if (!self.hash_password) return cb(null, false);
         Users.comparePassword(pass, self.hash_password, function(err, isMatch) {
            if (err) return cb(err);
            return cb(null, isMatch);
-        })
+        });
+    };
+
+    self.setNewAPIKey = function(cb) {
+        Users.genAPIKey(function(err, token) {
+            self.apikey = token;
+            cb(null, token);
+        });
     }
 
     self.prepare = function(cb) {
         if (user_password) {
-            self.setPassword(user_password, function(err, result){
+            self.setNewAPIKey(function(err, result){
                 if (err) return cb(err);
-                return cb(null, result);
+                self.setPassword(user_password, function(err, result){
+                    if (err) return cb(err);
+                    return cb(null, result);
+                });
             })
         }
-    }
+    };
 
 
-}
+};
 

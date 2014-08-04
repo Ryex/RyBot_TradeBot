@@ -1,17 +1,13 @@
 var rek = require('rekuire');
 
+var request = require('request');
 var vows = require('vows');
-
 var assert = require('assert');
-
 var async = require('async');
 
+var Browser = require("zombie");
 
 var Config  = rek('config.js');
-
-
-
-var Browser = require("zombie");
 
 var app_env = rek('env');
 var DB = rek('db');
@@ -22,6 +18,8 @@ var startup = rek('startup');
 var siteURL = "http://localhost:" + Config.serverPort + "/";
 
 GLOBAL.TESTING = true;
+
+
 
 
 function teardownDB(topic) {
@@ -78,6 +76,7 @@ vows.describe('Server').addBatch({
         topic: function() {
             
             this.browser = new Browser();
+            this.browser.debug = true;
             
             startup.setupScribe();
             var app = startup.buildApp();
@@ -87,20 +86,17 @@ vows.describe('Server').addBatch({
         'and we visit the site' : {
             topic: function() {
                 var self = this;
-                this.browser.visit(siteURL, function(err, stuff){
-                    self.callback(err, stuff)
-                    
-                });
+                this.browser.visit(siteURL, this.callback);
             },
             
-            'we should get a setup page' : function () {
+            'we should get a setup page' : function (err, result) {
                 assert.isTrue(this.browser.success);
                 assert.equal(this.browser.location.pathname, "/setup");
             },
             
             'if we fill out the form and set up the server' : {
-                topic: function() {
-                    assert.equal(this.browser.location.pathname, "/setup");
+                topic: function(result) {
+                    assert.equal("/setup", this.browser.location.pathname);
                     this.browser.
                         fill("user[name]", "TestAdmin").
                         fill("user[pass]", "test1234").
@@ -109,21 +105,24 @@ vows.describe('Server').addBatch({
                         pressButton("Submit", this.callback);
                 },
                 
-                'we should be redirected to the login page' :  function () {
+                'we should be redirected to the login page' :  function (err, result) {
                     assert.isTrue(this.browser.success);
-                    assert.equal(this.browser.location.pathname, "/login");
+                    assert.equal("/login", this.browser.location.pathname);
                 },
                 
                 'if we then login' : {
-                    topic : function () {
-                        assert.equal(this.browser.location.pathname, "/login");
-                        this.browser.
-                            fill("username", "testadmin").
-                            fill("password", "test1234").
-                            pressButton("Sign In", this.callback);
+                    topic : function (result) {
+                        var self = this;
+                        assert.equal("/login", this.browser.location.pathname);
+                        this.browser.fill("username", "testadmin");
+                        this.browser.fill("password", "test1234");
+                        this.browser.pressButton("Sign In", function(err, result) {
+                            console.log(err, result);
+                            self.callback(null);
+                        });
                     },
                     
-                    'we should get our homepage' : function () {
+                    'we should get our homepage' : function (err, result) {
                         assert.isTrue(this.browser.success);
                         assert.equal(this.browser.location.pathname, "/");
                         assert.ok(this.browser.query("#greeting"));
@@ -139,8 +138,8 @@ vows.describe('Server').addBatch({
 }).addBatch({
     'If the server has been running and we visit the site' : {
         topic: function() {
-            
             this.browser = new Browser();
+            this.browser.debug = true;
             this.browser.visit(siteURL, this.callback);
         },
         
@@ -199,10 +198,11 @@ vows.describe('Server').addBatch({
         }
     }
 }).addBatch({
-    'If  we visit a page that does not exist' : {
+    'If we visit a page that does not exist' : {
         topic: function() {
             
             this.browser = new Browser();
+            this.browser.debug = true;
             this.browser.visit(siteURL + "notHere", this.callback);
         },
         
@@ -212,6 +212,52 @@ vows.describe('Server').addBatch({
             assert.equal(this.browser.statusCode, 404);
         }
         
+    }
+}).addBatch({
+    'If we login ' : {
+        topic: function() {
+            var self = this;
+            
+            self.browser = new Browser();
+            self.browser.debug = true;
+            self.browser.visit(siteURL + "login", function() {
+                self.browser.
+                    fill("username", "testadmin").
+                    fill("password", "test1234").
+                    pressButton("Sign In", self.callback);
+            });
+        },
+        
+        'we sould find': {
+            topic: function() {
+                var apikey = this.browser.query("#userapikey")
+                this.apikey = apikey._attributes.value._childNodes[0]._nodeValue;
+                return this.apikey;
+            },
+            
+            'an apikey hidden in the page':  function (apikey) {
+                assert.isString(apikey);
+            },
+            
+            'and then submit a request to api/accounts/list' :  {
+                topic: function () {
+                    var self = this;
+                    request.post(siteURL + "api/accounts/list", function(err, httpResponse, body) {
+                        self.callback(err, body);
+                    }).form({
+                        apikey: self.apikey
+                    })
+                },
+                
+                'we sould get a `JSON` list of accounts' : function (err, result) {
+                    assert.isNull(err);
+                    var jsonRes = JSON.parse(result);
+                    assert.isArray(jsonRes);
+                }
+            }
+            
+        }
+
     }
 }).addBatch({
     teardown: function() {

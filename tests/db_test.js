@@ -281,6 +281,15 @@ vows.describe('DB').addBatch({
                     name: "Test",
                     username: "test",
                     password: "$2a$10$Bfkwf/5Z1PRoUegVUm86Z.61Tr1DlD6FNuZnLOgZCoJq6UYkHKP/e",
+                    apikey: "MVGF892304NVCFALSDKFR01",
+                    admin: false
+
+                };
+                var usr_obj2 = {
+                    name: "Test0",
+                    username: "test0",
+                    password: "$2a$10$Bfkwf/5Z1PRoUegVUm86Z.61Tr1DlD6FNuZnLOgZCoJq6UYkHKP/e",
+                    apikey: "N293465VBN29ZXC-0930425",
                     admin: false
 
                 };
@@ -288,13 +297,19 @@ vows.describe('DB').addBatch({
                     var cb = self.callback;
                     //test error opening collection
                     if (err) return cb(err);
-
-                    collection.insert( usr_obj, function(err, result) {
+                    
+                    collection.insert(usr_obj2, function(err, result) {
                         // test error updating user
                         if (err) return cb(err);
-                        self.test_user_ID = result[0]._id;
-                        return cb(null, DB.Users);
+                        collection.insert(usr_obj, function(err, result) {
+                            // test error updating user
+                            if (err) return cb(err);
+                            self.test_user_ID = result[0]._id;
+                            return cb(null, DB.Users);
+                        });
                     });
+                    
+                    
                 });
             },
 
@@ -333,6 +348,19 @@ vows.describe('DB').addBatch({
                 }
 
             },
+            
+            'Has an asynchronous `findByAPIKey` function' : {
+                topic: function(users) {
+                    assert.isFunction(users.findByUsername);
+                    users.findByAPIKey("MVGF892304NVCFALSDKFR01", this.callback);
+                },
+
+                'that returns a user' : function(err, data) {
+                    assert.isNull(err);
+                    assert.instanceOf(data, DB.Users.User);
+                }
+
+            },
 
             'Has an asynchronous `hashPassword` function that takes a plain text password' : {
                 topic: function(users) {
@@ -358,11 +386,10 @@ vows.describe('DB').addBatch({
                 }
             },
 
-
             'Has an asynchronous `removeUser` function ' : {
                 topic: function(users) {
                     assert.isFunction(users.removeUser);
-                    users.removeUser("test", this.callback);
+                    users.removeUser("test0", this.callback);
                 },
 
                 'and when called returns removes a user' : function(err, numRemoved) {
@@ -370,6 +397,18 @@ vows.describe('DB').addBatch({
                     assert.isTrue(numRemoved > 0);
                 }
 
+            },
+            
+            'Has an asynchronous `genAPIKey` function' : {
+                topic: function(users) {
+                    assert.isFunction(users.genAPIKey);
+                    users.genAPIKey(this.callback);
+                },
+
+                'that generates a random token' : function(err, result) {
+                    assert.isNull(err);
+                    assert.isString(result);
+                }
             },
 
             'Has a Constructable `User` object that ...' : {
@@ -395,9 +434,21 @@ vows.describe('DB').addBatch({
                 'Has an `admin` boolean': function(user) {
                     assert.isBoolean(user.admin);
                 },
+                
+                'Has an asynchronous `setNewAPIKey` function' : {
+                    topic: function(user) {
+                        this.prekey = user.apikey;
+                        user.setNewAPIKey(this.callback);
+                    },
 
-                //TODO: impliment Tests
-                'Has a asynchronous `save` function that updates the user in the database' : {
+                    'that generates a new apikey and sets it' : function(err, result) {
+                        assert.isNull(err);
+                        assert.notEqual(result, this.prekey);
+                    }
+                    
+                }, 
+
+                'Has an asynchronous `save` function that updates the user in the database' : {
                     topic: function(user) {
                         assert.isFunction(user.save);
                         user.save(this.callback);
@@ -529,24 +580,6 @@ vows.describe('DB').addBatch({
 
                 'Has an `apiSecret`' : function(account) {
                     assert.isString(account.apiSecret);
-                },
-
-                'Has an Assets object that holds a map of account assets' : {
-                    topic: function(account) {
-                        assert.isObject(account.assets);
-                        return account.assets;
-                    },
-
-                    'that holds lists of daily balences' : function (assets) {
-                        for (var p in assets) {
-                            if (assets.hasOwnProperty(p)) {
-                                assert.isArray(assets[p]);
-                                for (var i = 0; i < assets[p].length; i++) {
-                                    assert.isArray(assets[p][i]);
-                                }
-                            }
-                        }
-                    }
                 },
 
                 'Has an asynchronous `save` function' :  {

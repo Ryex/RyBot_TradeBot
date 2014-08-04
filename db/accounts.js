@@ -31,14 +31,11 @@ accounts.Account = function(account_obj) {
     if (typeof(account_obj.apiSecret) != 'string') {
         throw new Error("Invalid type for `account_obj.apiSecret`: expected `string`, got `" + typeof(account_obj.apiSecret) + "`");
     }
-    
-    if (typeof(account_obj.assets) === 'undefined') account_obj.main = {};
 
     self.apiName = account_obj.apiName;
     self.accountName = account_obj.accountName;
     self.apiKey = account_obj.apiKey;
     self.apiSecret = account_obj.apiSecret;
-    self.assets = account_obj.assets;
     self._id = account_obj._id || new DB.ObjectID();
     
     self.save = function(cb) {
@@ -47,9 +44,7 @@ accounts.Account = function(account_obj) {
             apiName: self.apiName,
             accountName: self.accountName,
             apiKey: self.apiKey,
-            apiSecret: self.apiSecret,
-            assets: self.assets
-
+            apiSecret: self.apiSecret
         }
         gdb().collection("accounts", function(err, collection) {
             if (err) return cb(err);

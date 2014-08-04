@@ -2,3 +2,8 @@
 <% include flash_warning %>
 <% include flash_info %>
 <% include flash_success %>
+<% if (user && user.apikey) { %>
+    <form name="userapikey" action="" method="post">
+    <input type="hidden" id="userapikey" value="<%= user.apikey  %>" name="userapikey" />
+    </form>
+<% } %>

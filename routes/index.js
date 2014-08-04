@@ -32,59 +32,67 @@ routes.genPageEnv = function(req, res) {
     }
 }
 
-function badGlobalError(req, res, next) {
+routes.badGlobalError = function(req, res, next) {
     if (!global.BAD_ERROR) { return next();}
     var env = routes.genPageEnv(req, res)
     env.error = global.BAD_ERROR;
     res.render('error', env);
 }
 
-function ensureSetup(req, res, next) {
+routes.ensureSetup = function(req, res, next) {
     if (!global.SETUP) { return next(); }
     res.redirect('/setup')
 }
 
-function ensureAuthenticated(req, res, next) {
+routes.webAuthenticate = passport.authenticate('local', { failureRedirect: '/login', failureFlash: true });
+routes.apiAuthenticate = passport.authenticate('localapikey', { session: false, failureRedirect: '/api/unauthorized', failureFlash: true });
+
+routes.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
   res.redirect('/login')
 }
 
-function ensureAdmin(req, res, next) {
+routes.ensureAdmin = function(req, res, next) {
     if (req.user.admin) {return next(); }
     res.flash("error", "Not an Admin");
     res.redirect('/')
 }
 
-exports.addRoutes = function(app) {
+routes.addRoutes = function(app) {
     
     routes.buildRoutes();
     
-    app.use(badGlobalError);
+    app.use(routes.badGlobalError);
 
-    app.get('/', ensureSetup, ensureAuthenticated, routes.dashboard);
+    app.get('/', routes.ensureSetup, routes.ensureAuthenticated, routes.dashboard);
     
-    app.get('/log', ensureSetup, ensureAuthenticated, ensureAdmin, scribe.express.controlPanel()); 
+    app.get('/log', routes.ensureSetup, routes.ensureAuthenticated, routes.ensureAdmin, scribe.express.controlPanel()); 
 
     app.get('/setup', routes.setup);
     app.post('/setup', routes.setup);
 
-    app.get('/login', ensureSetup, routes.login);
-    app.post('/login', ensureSetup, passport.authenticate('local', { failureRedirect: '/login', failureFlash: true }),
-        function(req, res) {
+    app.get('/login', routes.ensureSetup, routes.login);
+    app.post('/login', routes.ensureSetup, routes.webAuthenticate, function(req, res) {
             res.redirect('/');
-        }
-    )
+    });
 
-    app.get('/logout', ensureSetup, function(req, res){
+    app.get('/logout', routes.ensureSetup, function(req, res){
         req.logout();
         res.redirect('/');
     });
 
-    app.get('/candle/:name/:mins/:pair/:date_start/:date_end', ensureSetup, ensureAuthenticated,  routes.candles);
-
-    app.get('/settings', ensureSetup, ensureAuthenticated, ensureAdmin, routes.settings)
-    app.post('/settings', ensureSetup, ensureAuthenticated, ensureAdmin, routes.settings)
-}
+    app.get('/settings', routes.ensureSetup, routes.ensureAuthenticated, routes.ensureAdmin, routes.settings);
+    app.post('/settings', routes.ensureSetup, routes.ensureAuthenticated, routes.ensureAdmin, routes.settings);
+    
+    app.get('/api/bad', routes.ensureSetup, function(req, res) {
+        res.json({error : "Not Authenticated", message: req.flash('error')})
+    });
+    
+    app.all('/api/accounts/list', routes.ensureSetup, routes.apiAuthenticate, routes.accounts.list);
+    
+    app.get('/api/candle/:name/:mins/:pair/:date_start/:date_end', routes.ensureSetup, routes.ensureAuthenticated,  routes.candles);
+    
+};
 
 routes.addErrorRoutes = function (app) {
     
@@ -120,18 +128,18 @@ routes.addErrorRoutes = function (app) {
       res.render('500', env);
     });
 
-}
+};
 
 routes.buildRoutes = function () {
 
     routes.login = function(req, res){
         if (req.user) {return res.redirect('/');}
-        res.render('login', routes.genPageEnv(req, res))
-    }
+        res.render('login', routes.genPageEnv(req, res));
+    };
     
     routes.setup = require('./setup');
     routes.settings = require('./settings');
-    routes.dashboard = require('./dashboard')
-
-    routes.candles = require('./candles.js')
-}
+    routes.accounts = require('./accounts');
+    routes.dashboard = require('./dashboard');
+    routes.candles = require('./candles.js');
+};
