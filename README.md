@@ -44,7 +44,7 @@ If you like my bot, a donation to any of the following addresses  would be appre
 
 ### Legal
 
-Copyright (c) 2014 by Benjamin (Ryex) Powers <Ryexander@gmail.com>
+Copyright (c) 2014 by Rachel (Ryex) Powers <powers.e.rachel@gmail.com>
 
 
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
