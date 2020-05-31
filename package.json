@@ -53,7 +53,7 @@
     "callsite": "^1.0.0",
     "bootstrap": "^3.2.0",
     "rekuire": "^0.1.5",
-    "lodash": "^2.4.1",
+    "lodash": "^4.17.15",
     "request": "^2.39.0"
   },
   "devDependencies": {
